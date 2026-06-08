@@ -1,0 +1,14 @@
+# LaTeX generated files
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.fdb_latexmk
+*.fls
+
+# Python/Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
