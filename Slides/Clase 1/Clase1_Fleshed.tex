@@ -1,0 +1,373 @@
+\documentclass{beamer}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb, graphicx, xcolor, tikz, multirow}
+\usetikzlibrary{positioning, arrows.meta}
+\usetheme{Madrid}
+\usecolortheme{whale}
+
+\title{Clase 1: El Marco de Decisiones Secuenciales}
+\subtitle{Métodos para la Gestión - Business School}
+\author{Daniela Pucci de Farias}
+\institute{Universidad Torcuato Di Tella}
+\date{Sesión de 180 Minutos}
+
+\begin{document}
+
+% --- SLIDE 1: PORTADA ---
+\frame{\titlepage}
+
+% --- SLIDE 2: OBJETIVOS DEL CURSO ---
+\begin{frame}{¿Qué se llevan de este curso?}
+\begin{itemize}
+    \item \textbf{Sin un buen marco:}
+    \begin{itemize}
+        \item Decisiones miopes (enfocadas solo en hoy).
+        \item Reglas \textit{ad hoc} basadas en intuición, no en datos.
+    \end{itemize}
+    \vspace{0.3cm}
+    \item \textbf{Con este curso aprenderán a:}
+    \begin{itemize}
+        \item Modelar problemas complejos de negocios.
+        \item Usar algoritmos para encontrar la estrategia óptima.
+        \item Entender el balance entre "aprender" y "ganar".
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% --- SLIDE 3: AGENDA (BLOQUE 1) ---
+\begin{frame}{Agenda: Bloque 1 (60 min)}
+\textbf{La Intuición del Manager}
+\begin{enumerate}
+    \item Definición de Decisiones Secuenciales.
+    \item ¿Dónde fallan los modelos estáticos?
+    \item El Dilema: Exploración vs. Explotación.
+    \item El Marco Agente-Ambiente en RL.
+\end{enumerate}
+\end{frame}
+
+% --- SLIDE 4: DEFINICIÓN ---
+\begin{frame}{¿Qué es una Decisión Secuencial?}
+\begin{center}
+    \Large "¿Qué creen que significa?"
+\end{center}
+\pause
+\begin{itemize}
+    \item No es una decisión aislada (ej. comprar una casa).
+    \item Es una \textbf{trayectoria}:
+    \begin{enumerate}
+        \item Tomo una decisión hoy.
+        \item El mundo cambia (o yo lo cambio).
+        \item Mañana enfrento una nueva situación basada en lo que hice hoy.
+    \end{enumerate}
+\end{itemize}
+\end{frame}
+
+% --- SLIDE 5: CASO DINÁMICO VS ESTÁTICO ---
+\begin{frame}{Dinámico vs. Estático: El Inventario}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\textbf{Visión Estática:}
+"Optimiza el pedido de hoy para minimizar el costo de hoy."
+\end{column}
+\begin{column}{0.5\textwidth}
+\textbf{Visión Secuencial:}
+"Si pido de más hoy, tendré costos de almacenamiento mañana, pero si pido de menos, perderé clientes que no volverán."
+\end{column}
+\end{columns}
+\vspace{0.5cm}
+\begin{block}{Insight}
+Las decisiones secuenciales consideran el \textbf{Costo de Oportunidad} del futuro.
+\end{block}
+\end{frame}
+
+% --- SLIDE 6: EL AGENTE (EL MANAGER) ---
+\begin{frame}{El Marco RL: El Agente}
+
+
+[Image of the Reinforcement Learning agent-environment loop]
+
+\begin{itemize}
+    \item El \textbf{Agente} es el tomador de decisiones (nosotros, o un algoritmo).
+    \item Tiene un objetivo claro: Maximizar la recompensa total a largo plazo.
+    \item No conoce necesariamente todas las reglas del juego al principio.
+\end{itemize}
+\end{frame}
+
+% --- SLIDE 7: EL AMBIENTE (EL MERCADO) ---
+\begin{frame}{El Marco RL: El Ambiente}
+\begin{itemize}
+    \item El \textbf{Ambiente} es todo lo que está fuera del control del manager.
+    \item Responde a las acciones del agente.
+    \item \textbf{Incertidumbre:} El ambiente es estocástico (probabilístico). 
+    \item Ejemplo: Lanzamos un producto (Acción) y la demanda puede ser Alta, Media o Baja (Respuesta del Ambiente).
+\end{itemize}
+\end{frame}
+
+% --- SLIDE 8: EXPLORACIÓN VS EXPLOTACIÓN (TEORÍA) ---
+\begin{frame}{Exploración vs. Explotación}
+Es el desafío fundamental de la Inteligencia Artificial y de la Estrategia:
+\begin{itemize}
+    \item \textbf{Explotación:} Sacar provecho de la mejor opción conocida hasta ahora.
+    \item \textbf{Exploración:} Probar opciones desconocidas para ver si son mejores.
+\end{itemize}
+\vspace{0.3cm}
+\textit{"Si solo explotas, te quedas atrás. Si solo exploras, nunca ganas dinero."}
+\end{frame}
+
+% --- SLIDE 9: DISCUSIÓN: CASO RESTAURANTE ---
+\begin{frame}{Discusión: El Dilema del Menú}
+Eres el dueño de un restaurante exitoso.
+\begin{itemize}
+    \item \textbf{Opción A (Explotación):} Mantener los 5 platos que siempre se venden bien. Ingreso seguro.
+    \item \textbf{Opción B (Exploración):} Quitar 2 platos para probar recetas innovadoras. Podrías duplicar clientes o perder a los actuales.
+\end{itemize}
+\vspace{0.3cm}
+\textbf{Pregunta:} ¿De qué factores depende que elijas explorar o explotar? (Tiempo, Capital, Competencia).
+\end{frame}
+
+% --- SLIDE 10: AGENDA (BLOQUE 2) ---
+\begin{frame}{Agenda: Bloque 2 (60 min)}
+\textbf{Modelado y Cadenas de Markov}
+\begin{enumerate}
+    \item La Propiedad de Markov: ¿Qué es un "Estado"?
+    \item Matrices de Transición.
+    \item Caso de Estudio: Ghana Telecom (Market Share).
+    \item El concepto de Estado Estacionario.
+\end{enumerate}
+\end{frame}
+
+% --- SLIDE 11: ¿QUÉ ES UN ESTADO? ---
+\begin{frame}{El concepto de Estado ($s_t$)}
+El estado es un "resumen" de la situación actual.
+\begin{itemize}
+    \item \textbf{Estado Pobre:} "Ventas de ayer".
+    \item \textbf{Estado Rico:} "Inventario actual + Tendencia de demanda + Precios de competencia".
+\end{itemize}
+\vspace{0.3cm}
+\begin{alertblock}{Regla de Oro}
+El estado debe contener toda la información necesaria para predecir el futuro \textit{sin mirar el pasado remoto}.
+\end{alertblock}
+\end{frame}
+
+% --- SLIDE 12: LA PROPIEDAD DE MARKOV ---
+\begin{frame}{La Propiedad de Markov}
+Matemáticamente:
+\[ P(s_{t+1} | s_t, a_t, s_{t-1}, a_{t-1}, \dots) = P(s_{t+1} | s_t, a_t) \]
+\vspace{0.3cm}
+\textbf{En palabras de negocios:}
+"Sabiendo dónde estamos hoy ($s_t$) y qué decidimos hacer ($a_t$), el pasado es irrelevante para lo que pasará mañana."
+\end{frame}
+
+% --- SLIDE 13: CASO MARKET SHARE (INTRO) ---
+\begin{frame}{Caso: Participación de Mercado}
+Imagina el mercado de telecomunicaciones en Ghana (Datos reales simplificados).
+Existen dos competidores principales: \textbf{Operador M} y \textbf{Operador V}.
+\begin{itemize}
+    \item Queremos predecir cómo se moverán los clientes entre ellos.
+    \item Necesitamos entender las probabilidades de "Lealtad" y "Fuga".
+\end{itemize}
+\end{frame}
+
+% --- SLIDE 14: DATOS DE TRANSICIÓN ---
+\begin{frame}{Datos del Caso Ghana}
+\begin{itemize}
+    \item \textbf{De los clientes de M:}
+    \begin{itemize}
+        \item 71.6\% se quedan en M el próximo mes.
+        \item 28.4\% se pasan a V.
+    \end{itemize}
+    \vspace{0.3cm}
+    \item \textbf{De los clientes de V:}
+    \begin{itemize}
+        \item 38.7\% se quedan en V.
+        \item 61.3\% se pasan a M.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+% --- SLIDE 15: LA MATRIZ DE TRANSICIÓN ---
+\begin{frame}{La Matriz de Transición ($P$)}
+Representamos esto como una matriz:
+\[
+P = 
+\begin{pmatrix}
+0.716 & 0.284 \\
+0.613 & 0.387
+\end{pmatrix}
+\]
+\begin{itemize}
+    \item Las filas deben sumar 1 (todos los clientes terminan en algún lado).
+    \item Los elementos $P_{ij}$ son las probabilidades de ir del estado $i$ al $j$.
+\end{itemize}
+\end{frame}
+
+% --- SLIDE 16: CÁLCULO DE CUOTA DE MERCADO ---
+\begin{frame}{¿Dónde estaremos mañana?}
+Si hoy la cuota de mercado es $x_t = [M, V]$, mañana será:
+\[ x_{t+1} = x_t \cdot P \]
+\vspace{0.5cm}
+\textbf{Ejemplo:}
+Si hoy M tiene el 33\% y V el 67\% ($x_0 = [0.33, 0.67]$):
+\[ [0.33, 0.67] \times \begin{pmatrix} 0.716 & 0.284 \\ 0.613 & 0.387 \end{pmatrix} = [0.647, 0.353] \]
+\textbf{Resultado:} ¡En un solo mes M saltó del 33\% al 64.7\%!
+\end{frame}
+
+% --- SLIDE 17: EL LARGO PLAZO ---
+\begin{frame}{¿Qué pasa en el infinito?}
+Si seguimos multiplicando $x_t \cdot P \cdot P \cdot P \dots$ llegamos al \textbf{Estado Estacionario} ($\pi$).
+\begin{itemize}
+    \item Es el equilibrio del mercado.
+    \item No depende de quién empezó ganando hoy.
+    \item Depende únicamente de las probabilidades de la matriz.
+\end{itemize}
+\end{frame}
+
+% --- SLIDE 18: DISCUSIÓN ESTRATÉGICA ---
+\begin{frame}{Pregunta para el Manager de V}
+Tu cuota está cayendo hacia el equilibrio. Tienes dos opciones de inversión:
+\begin{enumerate}
+    \item \textbf{Inversión en Marketing:} Subir tu retención de 38\% a 45\%.
+    \item \textbf{Inversión en Ventas:} Robar el 35\% de M en lugar del 28\%.
+\end{enumerate}
+\vspace{0.3cm}
+¿Cuál tiene mayor impacto en el equilibrio de largo plazo? (Lo resolveremos en el Lab).
+\end{frame}
+
+% --- SLIDE 19: RECESO ---
+\begin{frame}{Receso}
+\begin{center}
+    \Huge \textbf{15 MINUTOS} \\
+    \vspace{0.5cm}
+    \large Preparen sus computadoras para el Bloque de Python.
+\end{center}
+\end{frame}
+
+% --- SLIDE 20: AGENDA (BLOQUE 3) ---
+\begin{frame}{Agenda: Bloque 3 (60 min)}
+\textbf{Laboratorio de Simulación y Recompensas}
+\begin{enumerate}
+    \item Implementación en Python (Numpy).
+    \item Simulación de trayectorias.
+    \item Definiendo la Recompensa ($r$): Margen vs. Volumen.
+    \item Introducción al Horizonte de decisión.
+\end{enumerate}
+\end{frame}
+
+% --- SLIDE 21: PYTHON: DEFINICIÓN DE MATRIZ ---
+\begin{frame}[fragile]{Paso 1: Configuración Inicial}
+\begin{verbatim}
+import numpy as np
+
+# Matriz de transición (Ghana Case)
+P = np.array([[0.716, 0.284], 
+              [0.613, 0.387]])
+
+# Estado inicial (M=33%, V=67%)
+x = np.array([0.33, 0.67])
+\end{verbatim}
+\end{frame}
+
+% --- SLIDE 22: PYTHON: ITERACIÓN ---
+\begin{frame}[fragile]{Paso 2: Evolución a 12 meses}
+\begin{verbatim}
+print("Mes 0:", x)
+for mes in range(1, 13):
+    x = np.dot(x, P)
+    print(f"Mes {mes}: {np.round(x, 3)}")
+\end{verbatim}
+\vspace{0.3cm}
+\textbf{Tarea en clase:} Observen en qué mes los números dejan de cambiar significativamente.
+\end{frame}
+
+% --- SLIDE 23: PYTHON: ENCONTRAR EL EQUILIBRIO ---
+\begin{frame}[fragile]{Paso 3: El Estado Estacionario}
+Podemos elevar la matriz a una potencia grande ($P^{100}$):
+\begin{verbatim}
+P_inf = np.linalg.matrix_power(P, 100)
+print("Equilibrio Teórico:\n", P_inf[0])
+\end{verbatim}
+\vspace{0.3cm}
+Esto nos dice el market share "final" si no cambiamos nuestra estrategia.
+\end{frame}
+
+% --- SLIDE 24: RECOMPENSAS: ¿QUÉ ES EL ÉXITO? ---
+\begin{frame}{Definiendo la Recompensa ($r$)}
+Un MDP necesita saber qué queremos maximizar.
+\begin{itemize}
+    \item \textbf{No es solo dinero bruto.}
+    \item Es una función $r(s, a)$ que da feedback al agente.
+\end{itemize}
+\vspace{0.3cm}
+\textbf{Ejemplo en Gestión de Inventario:}
+\[ r = (\text{Ventas} \times \text{Precio}) - (\text{Costo Stock}) - (\text{Penalidad Faltante}) \]
+\end{frame}
+
+% --- SLIDE 25: RECOMPENSA VS. OBJETIVOS ---
+\begin{frame}{Trampa del Manager: Recompensas Mal Diseñadas}
+¿Qué pasa si premiamos a un algoritmo de ventas solo por "Número de unidades vendidas"?
+\pause
+\begin{itemize}
+    \item El algoritmo pondrá precio \$0.
+    \item \textbf{Consecuencia:} Vende todo, pero quiebra la empresa.
+\end{itemize}
+\vspace{0.3cm}
+\begin{block}{Lección}
+La recompensa debe capturar el \textbf{Margen Neto}, no solo el volumen.
+\end{block}
+\end{frame}
+
+% --- SLIDE 26: EL MARGEN NETO COMO $r(s)$ ---
+\begin{frame}{Profundizando en el Margen}
+Imagina el estado $i$ (unidades en stock).
+\[ r(i) = p \cdot E[\min(i, D)] - c \cdot i \]
+Donde:
+\begin{itemize}
+    \item $p$: Precio de venta.
+    \item $D$: Demanda aleatoria.
+    \item $c$: Costo de mantener cada unidad.
+\end{itemize}
+\vspace{0.3cm}
+\textbf{Pregunta:} ¿Por qué usamos el valor esperado $E[\dots]$? (Porque la demanda es incierta).
+\end{frame}
+
+% --- SLIDE 27: EL CONCEPTO DE HORIZONTE ($T$) ---
+\begin{frame}{¿Hasta cuándo planeamos?}
+\begin{itemize}
+    \item \textbf{Horizonte Finito:} El problema termina en $T$. (Ej: Temporada navideña, vuelo de avión).
+    \item \textbf{Horizonte Infinito:} El negocio continúa indefinidamente. (Ej: Mantenimiento de una represa).
+\end{itemize}
+\vspace{0.3cm}
+La estrategia óptima cambia radicalmente si sabemos que "mañana cerramos".
+\end{frame}
+
+% --- SLIDE 28: PLANIFICACIÓN A 12 MESES ---
+\begin{frame}{Horizonte Finito en Negocios}
+\begin{itemize}
+    \item Típico en presupuestos anuales.
+    \item \textbf{El efecto "Fin de Año":} Los managers suelen tomar decisiones agresivas en diciembre para cumplir metas, aunque dañen enero.
+    \item El MDP nos ayudará a evitar esta miopía.
+\end{itemize}
+\end{frame}
+
+% --- SLIDE 29: HACIA LA CLASE 2 ---
+\begin{frame}{Conclusiones de la Clase 1}
+\begin{enumerate}
+    \item El mundo es secuencial y markoviano.
+    \item Los datos de transición (Ghana) predicen el futuro.
+    \item Definir bien la recompensa ($r$) es más importante que el algoritmo.
+\end{enumerate}
+\end{frame}
+
+% --- SLIDE 30: TAREA Y PREPARACIÓN ---
+\begin{frame}{Próximos Pasos}
+\begin{itemize}
+    \item \textbf{Lectura:} Revisen el concepto de Programación Dinámica.
+    \item \textbf{Clase 2:} Veremos la \textbf{Ecuación de Bellman}.
+    \item Aprenderemos a decidir cuánto cobrar por un pasaje de avión dependiendo de cuántos días faltan.
+\end{itemize}
+\vspace{0.8cm}
+\centering
+\Large ¡Gracias por su participación!
+\end{frame}
+
+\end{document}

@@ -1,0 +1,76 @@
+\documentclass[xcolor=dvipsnames]{beamer}
+
+% 1. PREÁMBULO: Configuraciones Globales
+\usetheme{Madrid}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish, es-tabla]{babel} % es-tabla para que diga Tabla y no Cuadro
+\usepackage{amsmath, amssymb}
+\usepackage{diagbox}
+\usepackage{multirow}
+\usepackage{tikz}
+
+% 2. CONFIGURACIÓN DE TIKZ (Debe ir en el preámbulo)
+\usetikzlibrary{arrows.meta, positioning, calc}
+\tikzset{
+    state/.style={circle, draw=black, thick, minimum size=1.1cm, font=\bfseries},
+    alc/.style={state, fill=Emerald!20, text=Emerald!70!black},
+    baj/.style={state, fill=Maroon!20, text=Maroon!70!black},
+    est/.style={state, fill=Gray!20, text=Gray!70!black},
+    trans/.style={->, >={Stealth[scale=1.0]}, thick, black!70, shorten >=1pt},
+    val/.style={font=\tiny\bfseries, text=blue!80!black, yshift=2mm}
+}
+
+% 3. DATOS DE LA PRESENTACIÓN
+\title{Procesos de Decisión de Markov}
+\author{Daniel}
+\date{2026}
+
+% 4. CUERPO DEL DOCUMENTO
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Cálculo de la Función Valor: Recursión}
+Para calcular $V_t(s)$, propagamos los valores desde el horizonte final ($t=0$) hacia atrás.
+
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm, scale=0.9]
+    % 1. Nodos de tiempo (Siempre visibles o desde el inicio)
+    \node[font=\small] at (0, 2.5) {$t=2$};
+    \node[font=\small] at (3, 2.5) {$t=1$};
+    \node[font=\small] at (6, 2.5) {$t=0$ (Fin)};
+    
+    % 2. Columna t=0 (Caso Base) - Aparece en la transparencia 2
+    \node<2->[alc] (A2) at (6, 1.5) {A};
+    \node<2->[baj] (B2) at (6, 0) {B};
+    \node<2->[val] at (A2.north) {$V_0=0.005$};
+    \node<2->[val] at (B2.north) {$V_0=-0.005$};
+
+    % 3. Columna t=1 - Aparece en la transparencia 3
+    \node<3->[alc, fill=white, draw=black!30] (A1) at (3, 1.5) {A};
+    \node<3->[baj, fill=white, draw=black!30] (B1) at (3, 0) {B};
+
+    % 4. Flechas de cálculo V1 - ¡CRÍTICO! Deben ser <3-> para que A1 ya exista
+    \draw<3->[trans, blue] (A1) -- (A2) node[midway, above, font=\tiny] {0.9};
+    \draw<3->[trans, blue!50] (A1) -- (B2) node[pos=0.7, above, font=\tiny] {0.1};
+    
+    % Valor calculado para V1 - Aparece en la transparencia 4
+    \node<4->[val] at (A1.north) {$V_1=0.009$};
+
+    % 5. Columna t=2 - Aparece en la transparencia 5
+    \node<5->[alc] (A0) at (0, 1.5) {A};
+    \node<5->[baj] (B0) at (0, 0) {B};
+    
+    % Flecha que conecta t=2 con t=1
+    \draw<5->[trans, red] (A0) -- (A1) node[midway, above, font=\tiny] {0.9};
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+    \item<2-> \textbf{Paso 0:} $V_0(s) = r(s)$ (Caso base).
+    \item<3-> \textbf{Paso 1:} Calculamos $V_1$ usando los nodos de la derecha.
+    \item<5-> \textbf{Paso 2:} Repetimos hacia atrás para $V_2, V_3 \dots$
+\end{itemize}
+\end{frame}
+
+\end{document}

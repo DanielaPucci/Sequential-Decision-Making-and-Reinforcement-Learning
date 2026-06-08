@@ -1,0 +1,69 @@
+\documentclass{beamer}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb, graphicx, xcolor}
+\usetheme{default}
+
+\title{Clase 3: Sostenibilidad, Equilibrio y Riesgo}
+\subtitle{MDPs de Horizonte Infinito y Aplicaciones Financieras}
+\author{Daniela Pucci de Farias}
+\institute{Universidad Torcuato Di Tella}
+\date{Junio 2025}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{¿Por qué Horizonte Infinito?}
+\begin{itemize}
+    \item Algunos negocios no tienen "fecha de cierre":
+    \begin{itemize}
+        \item Gestión de un fondo de pensiones.
+        \item Operación de una planta de energía.
+        \item Conservación de recursos naturales (pesca).
+    \end{itemize}
+    \item \textbf{El Factor de Descuento ($\gamma$):}
+    \item ¿Cuánto vale \$1 mañana comparado con \$1 hoy?
+    \item $\gamma$ cercano a 1 = Manager paciente (sostenibilidad).
+    \item $\gamma$ cercano a 0 = Manager miope (ganancia inmediata).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Algoritmos de Resolución: Value Iteration}
+\begin{itemize}
+    \item No podemos retroceder desde el infinito.
+    \item \textbf{Idea:} Empezar con un tablero de valores al azar y aplicar la Ecuación de Bellman repetidamente.
+    \item \textbf{Convergencia:} Eventualmente, los valores dejan de cambiar. Hemos encontrado el equilibrio.
+    \item Analogie con la planeación estratégica anual: refinamos el plan hasta que es sólido.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Psicología del Riesgo: Funciones de Utilidad}
+\begin{itemize}
+    \item Un manager no solo maximiza dinero; minimiza el riesgo de quebrar.
+    \item \textbf{Utilidad Logarítmica:} $U(w) = \log(w)$.
+    \item El impacto de perder \$1M es mayor que el beneficio de ganar \$1M.
+    \item \textbf{MDP Financiero:}
+    \item Acción: ¿Qué \% de la cartera va a activos riesgosos ($\beta$)?
+    \item Observaremos cómo la IA se vuelve "conservadora" automáticamente al cambiar la función de utilidad.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Laboratorio 3: Optimización de Portafolio y Consumo}
+\begin{itemize}
+    \item \textbf{Simulación en Python:}
+    \item Comparar dos agentes: uno que maximiza riqueza final y otro que maximiza utilidad.
+    \item \textbf{Resultados:} Graficar la evolución de la riqueza. El agente de utilidad sobrevive a las crisis del mercado; el otro a veces quiebra.
+    \item \textbf{Extensión:} Añadir "Consumo" (cuánto dinero sacar del fondo cada mes).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Hacia el Aprendizaje por Refuerzo (RL)}
+\begin{itemize}
+    \item Hasta hoy, "sabíamos" las probabilidades del mercado ($P$).
+    \item \textbf{El Mundo Real:} No tenemos las matrices de transición.
+    \item \textbf{Próxima Clase:} Cómo el agente aprende $P$ y $r$ simplemente interactuando con el ambiente.
+    \item De MDPs a Q-Learning.
+\end{itemize}
+\end{frame}
+
+\end{document}

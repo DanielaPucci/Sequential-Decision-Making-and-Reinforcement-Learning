@@ -1,0 +1,40 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\begin{document}
+\title{Tarea 2}
+\author{Entrega: 23 de junio, 2025}
+\date{}
+\maketitle
+
+En esta tarea, vamos a explorar la aplicación a precios dinámicos que vimos en la clase. 
+\begin{enumerate}
+\item Acá tenemos el gráfico ilustrando la política óptima:
+\begin{center}
+\includegraphics[width=0.6\textwidth]{Figures/DynamicPrices.jpg}    
+\end{center}
+\begin{enumerate}
+\item Explicá la política óptima con tus propias palabras.
+\item Cambiá el código en Python con un horizonte $T=300$. Explicá el comportamiento de la nueva política óptima.
+\item Sin hacer cálculos, cómo pensás que debería ser la política óptima si seguís aumentando el horizonte?
+\end{enumerate}
+\item Ahora consideramos el comportamiento de precios cerca de la fecha del vuelo.
+\begin{enumerate}
+\item Qué sucede con la política óptima cuando faltan pocos días para el vuelo? 
+\item Consideremos el siguiente gráfico, que muestra el precio promedio de pasajes´en EEUU en 2012 respeto al número de días hasta el vuelo. 
+\begin{center}
+\includegraphics[width=0.6\textwidth]{Figures/2012-Domestic-Airfares.jpg}    
+\end{center}
+El gráfico coincide con la política óptima que calculamos? Si no coincide, cómo explicarías la diferencia?
+\end{enumerate}
+\item Supongamos que hay dos perfiles de pasajeros:
+\begin{itemize}
+\item turista: está dispuesto a pagar un valor máximo $m$, distribuido con probabilidades {\small ${\rm Prob}(m = 50) = 1/2$, ${\rm Prob}(m = 70) = 1/3$, ${\rm Prob}(m = 120) = 1/6$.}
+\item profesional: está dispuesto a pagar un valor máximo $m$, distribuido con probabilidades {\small ${\rm Prob}(m = 70) = 1/2$, ${\rm Prob}(m = 120) = 1/3$, ${\rm Prob}(m = 200) = 1/6$.}
+\end{itemize}
+\begin{enumerate}
+\item Supongamos que la probabilidad de que un posible pasajero sea turista $t$ días antes del vuelo es ${\rm Prob}(Turista) = p_t$ y ${\rm Prob}(Profesional) = 1 - p_t$. Cómo esperá que $p_t$ varíe en el tiempo? Explicá tu razonamiento.
+\item Especificá el modelo para el proceso markoviano de decisión en esas nuevas condiciones.
+\item (bonus) Assumiendo $p_t = 1-e^{-t/30}$, modificá la implementación en Python para lidiar con ese caso, y calculá la nueva política óptima.
+\end{enumerate}
+\end{enumerate}
+\end{document}

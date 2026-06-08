@@ -1,0 +1,8 @@
+\frametitle{Distribución de estados}
+\begin{verbatim}
+def simulate_distribution(P, mu0, T):
+    mu = [mu0]
+    for _ in range(T):
+        mu.append(mu[-1] @ P)
+    return mu
+\end{verbatim}

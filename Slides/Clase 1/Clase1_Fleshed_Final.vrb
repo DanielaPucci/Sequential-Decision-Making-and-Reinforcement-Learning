@@ -1,0 +1,12 @@
+\frametitle{Simulando la Trayectoria}
+\begin{verbatim}
+for t in range(20):
+    x = np.dot(x, P)
+    history.append(x)
+
+history = np.array(history)
+plt.plot(history[:, 0], label='Market Share M')
+plt.plot(history[:, 1], label='Market Share V')
+plt.legend()
+plt.show()
+\end{verbatim}

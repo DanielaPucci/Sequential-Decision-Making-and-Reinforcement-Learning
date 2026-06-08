@@ -1,0 +1,148 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{\textbf{Trabajo Práctico: Optimización de Decisiones Secuenciales Bajo Incertidumbre}}
+\date{Junio 2026}
+\author{Toma de Decisiones Secuenciales y Aprendizaje por Refuerzo}
+\begin{document}
+\maketitle
+
+\section*{Objetivo}
+El objetivo de este trabajo práctico es modelar, resolver y analizar un problema real de toma de decisiones secuenciales bajo incertidumbre. A través de este proyecto, los estudiantes demostrarán su capacidad para:
+\begin{itemize}
+    \item Formular y formalizar un modelo matemático adecuado basado en MDPs.
+    \item Implementar tanto algoritmos de resolución exacta como métodos basados en simulación o aprendizaje.
+    \item Evaluar críticamente las políticas óptimas resultantes, interpretando su estructura, viabilidad e impacto en el contexto del problema original.
+\end{itemize}
+
+\section*{Componentes del Proyecto}
+
+\subsection*{1. Modelado del Problema y Abstracción}
+\begin{itemize}    
+\item Seleccioná un problema de la realidad que requiera decisiones secuenciales y pueda estructurarse como un proceso markoviano de decisión (MDP).
+\item Definí y detallá analíticamente los componentes del modelo:
+\begin{itemize}
+    \item \textbf{Espacio de Estados ($S$)}
+    \item \textbf{Espacio de Acciones ($A$)}
+    \item \textbf{Dinámica de Transición ($P$)} 
+    \item \textbf{Función de Recompensa ($R$)} 
+\end{itemize}
+\item \textbf{Justificación del Modelo:} Explicá por qué esta representación captura fielmente la dinámica temporal y la incertidumbre del problema. Discutí el trade-off del diseño: cómo tu elección metodológica permite modelar los aspectos más críticos del sistema real sin sufrir las consecuencias de una excesiva complejidad computacional. ¿Qué simplificaciones asumiste y qué elementos decidiste omitir para mantener el modelo manejable?
+\end{itemize}
+
+\subsection*{2. Implementación Numérica en Python}
+
+A partir de la formalización matemática anterior, programá las siguientes tres funciones utilizando estructuras vectorizadas en Python:
+
+\begin{itemize}
+    \item $f(x, a, V) = r_a(x) + \alpha \sum_y P_a(x,y) V(y)$ 
+    
+    Calcula y retorna el valor de continuación esperado al estar en el estado $x$ y ejecutar la acción $a$, dada una función de valor $V$.
+    
+    \item $a^*(x, V) = \arg\max\limits_a f(x,a,V)$
+    
+    Determina la acci\'on codiciosa (\textit{greedy}) para el estado $x$, dada una función de valor $V$.
+    
+    \item $g(x,a) = (r,y)$ \quad donde \quad $r = r_a(x)$ \quad y \quad $y \sim P_a(x, \cdot)$
+    
+   Genera una muestra estocástica de transición desde el estado $x$ tras tomar la acción $a$, devolviendo la recompensa inmediata obtenida y el pr\'oximo estado.
+\end{itemize}
+
+\subsection*{3. Algoritmos de Solución}
+
+Usando las funciones programadas en la sección anterior, implementá tres algoritmos para resolver el problema de decisión formalizado:
+\begin{itemize}
+    \item Iteración de Valor.
+    \item Iteración de Política.
+    \item Q-Learning (basado en el muestreo estocástico de transiciones).
+\end{itemize}
+
+\subsection*{4. Desempeño Algorítmico y Dinámica Computacional}
+\begin{itemize}
+\item ¿Qué algoritmo demostró una mayor eficiencia computacional en términos de tiempo de convergencia? ¿Qué discrepancias u omisiones observás al contrastar las políticas y funciones de valor obtenidas mediante métodos exactos frente al método basado en simulaci\'on (Q-Learning)? 
+
+\item Discutí detalladamente los aspectos críticos de tu implementación de Q-Learning, tales como la calibración de la tasa de aprendizaje y del \textit{trade-off} entre exploración y explotación, y la estabilidad numérica del algoritmo.
+\end{itemize}
+
+\subsection*{5. Interpretación, Aplicabilidad y Crítica del Modelado}
+El informe final debe incluir una discusión profunda que traduzca los resultados numéricos en decisiones de gestión, estructurada bajo los siguientes ejes:
+\begin{itemize}
+    \item \textbf{Interpretación y Sentido Económico de la Política Óptima:} Analizá la política resultante. ¿Tiene sentido desde la perspectiva económica y operativa del problema real? Identificá si la pol\'itica tiene una estructura discernible. \textquestiondown Hay una interpretaci\'on intuitiva de la pol\'itica \'optima?
+    \item \textbf{Impacto de la Abstracción y el Diseño del Modelo:} Evaluá cómo afectaron tus decisiones de modelado al resultado final. Podés profundizar en el impacto del tamaño del espacio de estados (maldición de la dimensionalidad) o en cómo la simplificación de la función de recompensa pudo haber inducido comportamientos imprevistos o sesgados respecto a la realidad.
+    \item \textbf{Aplicabilidad, Limitaciones y Extensiones Futuras:} Proponé direcciones futuras para mitigar las limitaciones de tu modelo actual y mejorar su transferencia práctica. Describí qué desafíos teóricos y prácticos surgirían si decidieras incorporar espacios de estados continuos (aproximación lineal/Deep RL) o mitigar sesgos de maximización.
+\end{itemize}
+
+\section*{Entregables}
+\begin{itemize}
+    \item {\bf 8 de junio}: Formación de grupos (3 integrantes).
+    \item {\bf 29 de junio}: Propuesta del problema a ser resolvido y modelo inicial de MDP (PDF, máx. 2 páginas).
+    \item {\bf 27 de julio}:
+    \begin{itemize}
+    \item Un informe PDF (máx. 8 páginas) con:
+    \begin{itemize}
+        \item Descripción del problema.
+        \item Formalización final del MDP.
+        \item Resultados de las políticas obtenidas.
+        \item Análisis y futuras direcciones.
+    \end{itemize}
+    \item Código Python en un Jupyter Notebook. organizado y documentado.
+    \item Presentación oral (15 minutos).
+    \end{itemize}
+\end{itemize}
+
+\section*{Criterios de Evaluación}
+El proyecto se evaluará de manera integral bajo los siguientes criterios:
+
+\begin{itemize}
+    \item \textbf{Calidad del Modelado:} Rigor en la definición de estados, acciones y recompensas, y solidez en la justificación de los supuestos y simplificaciones asumidas.
+    \item \textbf{Corrección de la Implementación:} Exactitud numérica de los tres algoritmos en Python y eficiencia en la convergencia.
+    \item \textbf{Profundidad del Análisis:} Capacidad crítica para interpretar la estructura de la política resultante, discutir sus limitaciones y evaluar su aplicabilidad práctica.
+    \item \textbf{Claridad y Rigor Académico:} Estructura profesional del informe, uso correcto de la notación matemática y claridad en la visualización de resultados.
+    \item \textbf{Originalidad:} Creatividad en el modelado del problema y/o la implementaci\'on computacional. 
+\end{itemize}
+
+\newpage
+
+\section*{Sugerencias de proyectos}
+
+\textbf{Los grupos pueden elegir una opción entre las ideas abajo o otro problema que sea de su interese, desde que se trate de una situación de toma de decisiones secuenciales.}
+
+\subsection*{Extensiones de Ejemplos Vistos en Clase}
+\begin{enumerate}
+    \item \textbf{Precios Dinámicos con Segmentación de Demanda:}
+    Optimización de tarifas en tiempo real frente a un flujo heterogéneo de clientes donde la probabilidad de llegada de cada perfil varía a lo largo del horizonte de decisión. 
+
+    \item \textbf{Optimización de Portafolio:}
+    Extensiones donde el agente debe decidir simultáneamente el nivel de consumo y la asignación de capital entre activos con y sin riesgo, y/o donde se incorporen fricciones reales del mercado, como costos de transacción asimétricos o dinámicas de volatilidad estocástica y cambios de régimen en los activos, o m\'ultiples activos de riesgo.
+
+    \item \textbf{Valuación de Opciones:}
+    Determinación del precio y de la política de ejercicio óptimo para contratos con opcionalidad compleja (opciones bermuda, de barrera o asiáticas), o bajo modelos de activos subyacentes que abandonen los supuestos tradicionales de Black-Scholes (como incorporar saltos en el precio o volatilidad estocástica).
+
+    \item \textbf{Gestión de Inventario:}
+    Estrategias de reposición bajo situaciones m\'as complejas, por ejemplo donde la demanda exhiba patrones como estacionalidad, tendencias o autocorrelación, o la reposici\'on est\'e sujeta a lead times, posiblemente con incertidumbre. 
+\end{enumerate}
+
+\subsection*{Otras Ideas de Aplicación}
+
+\begin{enumerate}
+    \item \textbf{Arbitraje Energético y Gestión de Baterías en la Red:}
+    Optimización de los ciclos de carga y descarga de un sistema de almacenamiento comercial conectado a una red eléctrica. 
+
+    \item \textbf{Mantenimiento Predictivo y Reemplazo de Activos:}
+    Gestión del ciclo de vida de un equipo industrial sujeto a un proceso continuo y estocástico de deterioro.
+
+    \item \textbf{Control de Riego y Decisiones Agrícolas bajo Riesgo Climático:}
+    Planificación secuencial del uso de recursos hídricos en el agro, donde las decisiones de riego deben adaptarse continuamente al estado de maduración del cultivo, las condiciones del suelo y un pronóstico meteorológico incierto.
+
+    \item \textbf{Estrategias de Retención y Gestión de Campañas de Marketing:}
+    Optimización de la frecuencia de contacto y envío de incentivos a una base de clientes en un entorno contractual o de suscripción. 
+\end{enumerate}
+
+\end{document}
+

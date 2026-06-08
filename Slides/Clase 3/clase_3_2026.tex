@@ -1,0 +1,65 @@
+\documentclass[handout]{beamer}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamercolor{block body}{bg=gray!20, fg=black}
+\setbeamercolor{block title}{bg=blue!20, fg=black}
+
+\title{Clase 3: Sostenibilidad, Riesgo y Algoritmos}
+\subtitle{De Horizontes Finitos a Decisiones de Largo Plazo}
+\author{Daniela Pucci de Farias}
+\institute{Universidad Torcuato Di Tella}
+\date{Junio 2025}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Operaciones Sostenibles}
+\begin{itemize}
+    \item ¿Qué pasa cuando no hay una fecha de fin clara? ($T \rightarrow \infty$)
+    \item \textbf{Políticas Estacionarias:} La mejor acción depende del estado, no del tiempo.
+    \item \textbf{Ejemplo: Pesca de Salmones}
+    \begin{itemize}
+        \item Horizonte corto: Sobreexplotación para ganancias rápidas.
+        \item Horizonte infinito: Gestión sostenible para garantizar el futuro.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Algoritmos: ¿Cómo decide una IA?}
+\begin{itemize}
+    \item \textbf{Iteración de Valor:} Refinar el "tablero de puntajes" hasta que converja.
+    \item \textbf{Iteración de Política:} Evaluar una estrategia actual y buscar una mejora incremental.
+    \item \textbf{Rollout (Mejora de Heurísticas):}
+    \begin{itemize}
+        \item Tomar una regla de negocio actual y usarla para simular un paso adelante.
+        \item Base de aplicaciones exitosas como AlphaGo.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Riesgo y Utilidad en los Negocios}
+\begin{itemize}
+    \item Maximizar el valor esperado no siempre es el objetivo real.
+    \item \textbf{Aversión al Riesgo:} Preferimos \$500 seguros a una apuesta de \$0 o \$1000.
+    \item \textbf{Función de Utilidad $u(w)$:}
+    \begin{itemize}
+        \item Captura la psicología del tomador de decisiones.
+        \item Ejemplo: $u(w) = \log(w)$ (Utilidad logarítmica).
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Optimización de Portafolio}
+\begin{itemize}
+    \item Aplicación de MDP en finanzas:
+    \begin{itemize}
+        \item \textbf{Acción:} ¿Qué porcentaje invertir en activos riesgosos?
+        \item \textbf{Estado:} Riqueza acumulada.
+    \end{itemize}
+    \item \textbf{Conclusión:} La política óptima depende de la volatilidad y de nuestra propia aversión al riesgo definida en el MDP.
+\end{itemize}
+\end{frame}
+
+\end{document}

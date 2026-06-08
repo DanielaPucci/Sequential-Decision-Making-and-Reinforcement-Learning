@@ -1,0 +1,69 @@
+\documentclass[handout]{beamer}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{multirow}
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamercolor{block body}{bg=gray!20, fg=black}
+\setbeamercolor{block title}{bg=blue!20, fg=black}
+
+\title{Clase 2: Estrategias de Decisión y Horizontes}
+\subtitle{Métodos para la Gestión - Business School}
+\author{Daniela Pucci de Farias}
+\institute{Universidad Torcuato Di Tella}
+\date{Junio 2025}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{¿Por qué cambian las estrategias?}
+\begin{itemize}
+    \item \textbf{Caso de estudio:} Precios Dinámicos en Aerolíneas.
+    \item ¿Por qué el precio de un pasaje sube drásticamente 7 días antes del vuelo?
+    \item Factores en juego:
+    \begin{itemize}
+        \item Inventario (asientos restantes).
+        \item Tiempo restante (horizonte $T$).
+        \item Perfil del cliente (Turista vs. Corporativo).
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Modelando la Estrategia: MDP}
+\begin{itemize}
+    \item Un Proceso Markoviano de Decisión (MDP) se define por $(S, A, P, r)$:
+    \begin{itemize}
+        \item \textbf{Estado ($S$):} Situación actual (ej. 50 asientos libres, 10 días para el vuelo).
+        \item \textbf{Acción ($A$):} Decisión (ej. fijar precio en \$200).
+        \item \textbf{Transición ($P$):} Probabilidad de vender un pasaje.
+        \item \textbf{Recompensa ($r$):} Ganancia inmediata.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{La Lógica de "Mirar hacia Adelante"}
+\begin{itemize}
+    \item La \textbf{Ecuación de Bellman} resume el sentido común empresarial:
+    \begin{block}{Valor = Hoy + Mañana}
+    $$V_t^*(x) = \max_{a \in A} \{ \text{Recompensa Inmediata} + \text{Valor Futuro Esperado} \}$$
+    \end{block}
+    \item El impacto del \textbf{Horizonte $T$}:
+    \begin{itemize}
+        \item En logística con fecha de entrega o campañas electorales, el tiempo dicta la agresividad de la acción.
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Laboratorio: Perfiles de Cliente}
+\begin{itemize}
+    \item \textbf{Ejercicio computacional:}
+    \item Modificar el código Python para dos tipos de pasajeros:
+    \begin{enumerate}
+        \item \textbf{Turista:} Alta sensibilidad al precio, compra con anticipación.
+        \item \textbf{Profesional:} Baja sensibilidad al precio, compra a última hora.
+    \end{enumerate}
+    \item \textbf{Objetivo:} Observar cómo la política óptima $u^*(x,t)$ ajusta los precios automáticamente según la mezcla de clientes.
+\end{itemize}
+\end{frame}
+
+\end{document}

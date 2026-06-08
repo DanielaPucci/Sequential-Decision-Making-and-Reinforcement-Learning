@@ -1,0 +1,86 @@
+\documentclass{beamer}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb, graphicx, xcolor, multirow, diagbox, tikz}
+\usetikzlibrary{positioning}
+\usetheme{default}
+
+\title{Clase 1: Introducción a la Toma de Decisiones Secuenciales}
+\subtitle{Métodos para la Gestión - Maestría en Negocios}
+\author{Daniela Pucci de Farias}
+\institute{Universidad Torcuato Di Tella}
+\date{Junio 2025}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{El Corazón de la Gestión: Decisiones en el Tiempo}
+\begin{itemize}
+    \item La mayoría de los problemas de negocios no son eventos únicos.
+    \item \textbf{Ejemplos Reales:}
+    \begin{itemize}
+        \item Precios dinámicos (ajustar según demanda).
+        \item Gestión de inventario (pedir hoy para vender mañana).
+        \item Inversión de capital (gastar ahora para crecer después).
+    \end{itemize}
+    \item \textbf{Incertidumbre:} El futuro no es determinístico; es probabilístico.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Intuición de RL: Exploración vs. Explotación}
+\begin{itemize}
+    \item Antes de la matemática, pensemos en el dilema del manager:
+    \item \textbf{Explotación:} Usar la estrategia que funcionó el mes pasado para asegurar ventas conocidas.
+    \item \textbf{Exploración:} Probar un nuevo canal de marketing o un nuevo precio para ver si hay una oportunidad mejor.
+    \item \textbf{Gestión:} ¿Cómo equilibramos "ir a lo seguro" con "aprender del mercado"?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{El Marco: Agente y Ambiente}
+\centering
+\begin{tikzpicture}[node distance=2cm, auto]
+    \node [rectangle, draw, minimum width=2cm] (agent) {Agente (Manager)};
+    \node [rectangle, draw, minimum width=2cm, below of=agent] (env) {Ambiente (Mercado)};
+    \draw [->] (agent.east) -- ++(1,0) |- node [near start] {Acción $a_t$} (env.east);
+    \draw [->] (env.west) -- ++(-1,0) |- node [near start] {Estado $s_{t+1}$, Recompensa $r_t$} (agent.west);
+\end{tikzpicture}
+\begin{itemize}
+    \item \textbf{Estado ($s$):} Resumen de la situación actual.
+    \item \textbf{Acción ($a$):} Lo que decidimos hacer.
+    \item \textbf{Recompensa ($r$):} Feedback (ganancia, costo, satisfacción).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Caso de Estudio: Participación de Mercado en Ghana}
+\begin{itemize}
+    \item Modelamos la lealtad del cliente como una Cadena de Markov.
+    \item \textbf{Datos del Problema:}
+    \begin{itemize}
+        \item Operador M: 71.6\% de retención.
+        \item Operador V: 38.7\% de retención.
+    \end{itemize}
+    \item \textbf{Pregunta de Negocio:} Si hoy tengo el 33\% del mercado, ¿dónde estaré en 2 años?
+    \item \textbf{Simulación:} Veremos en Python cómo la "Distribución Estacionaria" nos dice el destino final del mercado independientemente de hoy.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{La Propiedad de Markov: "Lo que importa es hoy"}
+\begin{block}{Definición}
+$P(s_{t+1} | s_t, s_{t-1}, ..., s_0) = P(s_{t+1} | s_t)$
+\end{block}
+\begin{itemize}
+    \item Para un manager, esto significa elegir un \textbf{Estado} que sea un "resumen suficiente".
+    \item Si el inventario de ayer afecta la venta de mañana de una forma que el inventario de hoy no explica, ¡tu estado está incompleto!
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Laboratorio 1: Introducción a Python para MDPs}
+\begin{itemize}
+    \item Entorno: Google Colab.
+    \item \textbf{Ejercicio 1:} Definir matrices de transición para el mercado de telefonía.
+    \item \textbf{Ejercicio 2:} Proyectar la cuota de mercado a 12 meses.
+    \item \textbf{Visualización:} Graficar la convergencia hacia el equilibrio.
+\end{itemize}
+\end{frame}
+
+\end{document}

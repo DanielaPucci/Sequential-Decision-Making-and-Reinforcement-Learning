@@ -1,0 +1,8 @@
+\frametitle{Paso 3: El Estado Estacionario}
+Podemos elevar la matriz a una potencia grande ($P^{100}$):
+\begin{verbatim}
+P_inf = np.linalg.matrix_power(P, 100)
+print("Equilibrio Teórico:\n", P_inf[0])
+\end{verbatim}
+\vspace{0.3cm}
+Esto nos dice el market share "final" si no cambiamos nuestra estrategia.
