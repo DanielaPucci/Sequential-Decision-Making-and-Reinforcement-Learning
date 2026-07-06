@@ -1,0 +1,73 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{tabularx}
+\geometry{top=1in, bottom=1in, left=1in, right=1in}
+
+\begin{document}
+\title{Tarea 3}
+\author{Entrega: 30 de junio, 2026}
+\date{}
+\maketitle
+
+%En esta tarea retomaremos el problema de control de inventario gestionado como un Proceso Markoviano de Decisión (MDP). El objetivo es implementar y comparar dos métodos exactos basados en programación dinámica —Iteración de Valor e Iteración de Políticas— y hacer analíticamente concreta la dificultad computacional que emerge cuando modificamos los parámetros del sistema y el tamaño del espacio de estados (\textit{la maldición de la dimensionalidad}).
+%
+%Se considera una empresa que vende un único producto con demanda incierta. Al comienzo de cada período, el tomador de decisiones observa el nivel de stock, decide cuánto pedir al proveedor, enfrenta la demanda y obtiene una recompensa neta.
+
+Esta tarea explora el problema de control de inventario utilizando Procesos de Decisión Markovianos (MDPs). Se abordará la formulación teórica del problema, la implementación de algoritmos de programación dinámica (iteraci\'on de valor y  iteraci\'on de pol\'itica), un análisis de sensibilidad de parámetros económicos clave y una extensión a un sistema de inventario de dos productos.
+
+Considere un sistema de inventario con capacidad $M=30$. La demanda diaria es una variable aleatoria i.i.d. con la siguiente distribución de probabilidades:
+\vspace{0.3cm}
+
+\begin{tabularx}{\linewidth}{|l|X|X|X|X|X|X|X|}
+    \hline
+    \textbf{Demanda ($d$)} & 0 & 1 & 2 & 3 & 4 & 5 & 6 \\
+    \hline
+    \textbf{Probabilidad ($\mathbb{P}(D=d)$)} & 0.05 & 0.10 & 0.20 & 0.30 & 0.20 & 0.10 & 0.05 \\
+    \hline
+\end{tabularx}
+
+\vspace{0.3cm}
+
+Los parámetros económicos base del sistema son: 
+\begin{itemize}
+    \item Precio de venta por unidad: $p=10$
+    \item Costo de adquisición por unidad: $c=4$
+    \item Costo fijo de pedido: $K=8$
+    \item Costo de almacenamiento por unidad al final del día: $h=1$
+    \item Costo de penalización por demanda insatisfecha (\textit{stockout}): $b=6$
+\end{itemize}
+
+\begin{enumerate} 
+\item En este ejercicio formularemos en problema como un MDP.
+\begin{enumerate}
+    \item ¿Qué criterio de optimalidad decide utilizar para este problema? Justifique su elección.
+    \item Defina formalmente este problema como un MDP. 
+    \item ¿Cómo representaría este MDP en Python? Presente el código de soporte con explicaciones de su estructura y variables.
+\end{enumerate}
+
+\item En este ejercicio comparemos los métodos de resolución exacta de iteraci\'on de valor (VI) y  iteraci\'on de pol\'itica (PI) asumiendo un horizonte infinito.
+\begin{enumerate}
+    \item Implemente ambos algoritmos en Python utilizando criterios de convergencia adecuados.
+    \item Ejecute ambos algoritmos para los factores de descuento $\alpha \in \{0.80, 0.90, 0.95, 0.98\}$. Presente una tabla comparativa que incluya para cada $\alpha$: el algoritmo, el número de iteraciones, el tiempo de ejecución y una verificación de si las políticas óptimas obtenidas por ambos métodos coinciden.
+    \item Grafique el número de iteraciones y el tiempo de ejecución en función de $\alpha$. ¿Se comportan los algoritmos según lo esperado? Explique la intuición detrás de la velocidad de convergencia de cada método.
+\end{enumerate}
+
+\item En este ejercicio analizaremos la estructura de la política \'optima y su sensibilidad a par\'ametros del problema.
+\begin{enumerate}
+    \item Visualice la política óptima para los parámetros base utilizando un gr\'afico que considere adecuado. Analice su estructura. ¿Se observa algún patrón? Desarrolle.
+    \item Investigue cómo se altera la política óptima al modificar las variables económicas. Defina \textbf{al menos 3-4 escenarios} de variaciones en $K$, $h$ y/o $b$ (por ejemplo: costo fijo de transporte alto, costo de almacenamiento bajo, penalidad por faltante crítica, o combinaciones de interés). Para cada escenario, resuelva el MDP usando $\alpha=0.99$, grafique la política e interprete el impacto cualitativo de los cambios basándose en la intuición económica.
+    \item ¿Bajo qué circunstancias operativas, estructurales o de mercado el problema de control de inventario podría dar lugar a una política óptima que \textbf{no} siga la estructura encontrada en los incisos anteriores?
+\end{enumerate}
+
+\item Considere una extensión a un sistema con \textbf{dos productos} independientes (Producto 1 y Producto 2) que comparten una capacidad de almacenamiento total combinada de $M=30$ y un costo fijo de transporte $K$ compartido (el costo fijo se cobra una sola vez en el período si se solicita cualquier cantidad de cualquiera de los dos productos). Cada producto posee sus propios parámetros individuales de demanda, ganancia y costos de inventario.
+\begin{enumerate}
+    \item \textbf{Formule el MDP para dos productos:} Describa matemáticamente cómo cambiaría la definición del espacio de estados, el espacio de acciones admisibles, las transiciones estocásticas y la función de recompensa esperada. 
+    \item Compare formalmente las dimensiones del MDP de un solo producto con el formulado para dos productos. Estime el impacto de pasar de uno a dos productos sobre los tiempos de cómputo de VI y PI. 
+    \item \textbf{(Bonus)} Implemente numéricamente este caso en Python y reporte los tiempos de ejecución reales, contrastándolos con sus estimaciones teóricas.
+\end{enumerate}
+\end{enumerate}
+\end{document}

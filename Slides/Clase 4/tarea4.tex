@@ -1,0 +1,85 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\geometry{top=1in, bottom=1in, left=1in, right=1in}
+
+% Configuración para que el código de Python se vea impecable
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{gray}\itshape,
+    stringstyle=\color{purple},
+    showstringspaces=false,
+    breaklines=true,
+    extendedchars=true,
+    inputencoding=utf8,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {¿}{{\textquestiondown}}1
+}
+
+\begin{document}
+\title{Tarea 4}
+\author{Entrega: 7 de julio, 2026}
+\date{}
+\maketitle
+
+\textbf{Para esta tarea, se utiliza como base el notebook de Google Colab \href{https://colab.research.google.com/drive/1hJ9RvAWu6cCjrSdI0wOntlIFdFEpmTWu}{Módulo 3 - Navegación}. Cree una copia individual en su cuenta para realizar los cambios y experimentos necesarios. Se recomienda familiarizarse con las funciones presentes en el código base, ya que servirán como base para el desarrollo de todo el trabajo.}
+
+\vspace{0.5cm}
+
+Consideramos el ambiente de navegación visto en la clase. El agente comienza en la posición $(0,0)$ y debe alcanzar la meta minimizando el tiempo total de viaje (costo acumulado). Para cada estado $s$ diferente al estado final $s^*$ y acción válida $a$, el algoritmo de Q-learning actualiza sus estimaciones mediante la regla:
+$$
+  Q(s,a) \leftarrow Q(s,a) + \gamma \left[c + \min_{a'} Q(s',a') - Q(s,a)\right],
+$$
+donde $c$ es el costo inmediato observado, $s'$ es el estado siguiente (siendo el término futuro cero si $s'$ es la meta) y $\gamma \in (0,1)$ es la tasa de aprendizaje. Naturalmente $Q(s^*,a) = 0$ para cualquier acción $a$. 
+
+Durante la fase de entrenamiento, el agente selecciona sus acciones siguiendo una política $\varepsilon$-greedy: con probabilidad $\varepsilon$ elige una acción uniformemente al azar y, en caso contrario, selecciona la acción codiciosa que minimiza $Q(s,a)$. 
+
+El objetivo es estudiar cómo la exploración, la tasa de aprendizaje y la estacionaridad del entorno impactan la velocidad de convergencia y la calidad de la política final.
+
+\begin{enumerate}
+
+\item Durante el proceso de entrenamiento de un agente de Q-learning, el rendimiento se mide de manera continua a través del costo registrado en cada episodio. En este ejercicio, contrastaremos este indicador con el desempeño real de la política codiciosa asociada a la tabla $Q$ resultante al final del entrenamiento.
+
+\begin{enumerate}
+  \item Ejecute el algoritmo de Q-learning utilizando una tasa de aprendizaje $\gamma=0.08$ y una tasa de exploración constante $\varepsilon=0.10$. A partir de la tabla $Q$ final, extraiga la política codiciosa y estime el tiempo de viaje promedio desde el origen ejecutando la función \texttt{monte\_carlo} configurada a 5000 episodios. Repita esta estimación completa un total de 20 veces.
+
+  \item Calcule el tiempo promedio de viaje desde el estado inicial $(0,0)$ alcanzado por el agente durante los últimos 100 episodios de su fase de entrenamiento por Q-learning. Compare numéricamente este valor con los resultados de las evaluaciones de la pol\'itica codiciosa obtenidas mediante el método de Monte Carlo en el inciso anterior. ¿Cuál de las dos métricas arroja un tiempo promedio más elevado? Explique.
+
+  \item Calcule el valor exacto $V$ de la pol\'itica codiciosa usando la función \texttt{evaluar\_politica}. Luego, grafique las trayectorias del tiempo de viaje desde el estado inicial estimado por Monte Carlo a lo largo de los 5000 episodios para las 20 repeticiones independientes, superponiendo una línea horizontal que represente el tiempo exacto de viaje ($V(0,0)$). ¿A partir de cuántos episodios nota que la estimación muestral se estabiliza cerca de su media real? 
+\end{enumerate}
+
+\item Fije el parámetro de exploración en $\varepsilon=0.10$ y evalúe el impacto de la tasa de aprendizaje considerando el conjunto: $\gamma \in \{0.01,\,0.05,\,0.10,\,0.30,\,0.70\}$.
+\begin{enumerate}
+  \item Para cada valor de $\gamma$, grafique en una misma figura los tiempos de viaje a lo largo del entrenamiento (suavizados por media móvil sobre 100 episodios). Analice los resultados: ¿qué valores de $\gamma$ inducen un aprendizaje excesivamente lento? ¿Cuáles provocan una mayor variabilidad u oscilación en las estimaciones al finalizar los 5000 episodios?
+  \item Para cada configuración, extraiga la política codiciosa final. Calcule su función de valor exacta utilizando \texttt{evaluar\_politica} (fijando un límite máximo de 1000 iteraciones como criterio de resguardo). Calcule también la función de valor óptima utilizando la función \texttt{iteracion\_valor}. Grafique la función de valor resultante para cada $\gamma$ y la función de valor óptima en func\'ion del estado. ¿Se notan diferencias o anomalías? Explique. 
+\end{enumerate}
+
+\item En este ejercicio, vamos a explorar políticas de exploración variables, fijando la tasa de aprendizaje en $\gamma=0.08$.
+\begin{enumerate}
+  \item Adapte el código de la función \texttt{q\_learning} implementando los siguientes esquemas de exploración en función del número de episodio $k$: 
+  \begin{align*}
+    \varepsilon_k &= \max\{0.01,\,0.50(0.999)^k\},\\
+    \varepsilon_k &= \max\{0.01,\,1/\sqrt{k+1}\}.
+  \end{align*}
+  Evalúe y grafique las curvas de aprendizaje resultantes, comparando una exploración constante de $\varepsilon=0.10$ frente a los dos esquemas dinámicos de exploración. Reporte en una tabla el tiempo promedio de viaje durante todo el entrenamiento y los tiempos de viaje para la política final resultante de cada uno de los tres esquemas, siempre a partir del estado inicial.
+  \item Explique las ventajas y desventajas de los esquemas dinámicos y del esquema de exploración constante.
+  \item Suponga que se elimina por completo la exploración activa fijando un esquema constante de $\varepsilon=0$. ¿Es posible obtener la política óptima en este entorno específico bajo una inicialización optimista de la tabla en cero ($Q(s,a)=0$), sabiendo que todos los tiempos de viaje son estrictamente positivos? Explique.
+\end{enumerate}
+
+\item Entrene al agente durante un horizonte total de 5000 episodios fijando $\gamma=0.10$. Inmediatamente después de concluir el episodio 2500, simule una alteración estructural del entorno (por ejemplo, una obra vial que incrementa significativamente y de forma permanente el tiempo medio de tránsito de dos o tres calles críticas que componen la ruta óptima original). Este cambio ocurre sin previo aviso al agente.
+\begin{enumerate}
+  \item Utilizando Iteración de Valor, calcule la política óptima teórica antes y después de la modificación del mapa. Compare el desempeño adaptativo de Q-learning evaluando los valores de exploración constante $\varepsilon \in \{0,\,0.01,\,0.10,\,0.30\}$. Grafique el comportamiento del tiempo de viaje por episodio en la ventana cercana al cambio (episodios 2400 al 3000).
+  \item Defina el \textit{tiempo de adaptación} como el número de episodios requeridos tras el cambio para que la media móvil del tiempo de viaje se estabilice a menos de un 5\% del nuevo valor óptimo teórico. Compare las configuraciones de $\varepsilon$ bajo esta métrica. ¿Qué ocurre si $\varepsilon$ es muy cercano a cero y la nueva ruta óptima exige tomar acciones que la política vieja ignoraba por completo?
+  \item Analice el impacto de la tasa de aprendizaje comparando $\gamma=0.02$ frente a $\gamma=0.30$ bajo un $\varepsilon=0.10$ constante ante el mismo evento de la obra vial. ¿Cuál se adapta más rápido y cuál muestra mayor variabilidad residual? Explique qué impacto tendr\'ia una tasa de aprendizaje decreciente en este tipo de escenarios no estacionarios.
+\end{enumerate}
+
+\end{enumerate}
+
+\end{document}

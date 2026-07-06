@@ -25,6 +25,22 @@
 \institute{Universidad Torcuato Di Tella}
 \date{Modulo 3: Aprendizaje por Refuerzo}
 
+% 3. PERSONALIZACIÓN DEL FOOTER (Muestra únicamente: Módulo | Páginas con margen izquierdo)
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  % Bloque 1 (Izquierda/Centro): Nombre del Módulo con más espacio al borde (leftskip)
+  \begin{beamercolorbox}[wd=.8\paperwidth,ht=2.25ex,dp=1ex,leftskip=4ex,left]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\hspace*{2ex} \insertdate
+  \end{beamercolorbox}%
+  % Bloque 2 (Derecha): Numeración de Páginas
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vbox{}%
+}
+
 \begin{document}
 
 \frame{\titlepage}
@@ -36,71 +52,62 @@ En el m\'odulo anterior, estudiamos el marco de MDPs para resolver problemas de 
 
 \begin{itemize}
     \item \textbf{Iteraci\'on de Valor:} Actualiza valores hasta converger.
-    \item \textbf{Iteraci\'on de Pol\'itica:} Alterna entre evaluar $V^u$ (sistema lineal) y mejorar $u$ (\textit{greedy step}).
+    \item \textbf{Iteraci\'on de Pol\'itica:} Alterna entre evaluar $V_u$  y mejorar $u$.
 \end{itemize}
 
 \end{frame}
 
 % --- SLIDE: MDPs EN EL MUNDO REAL ---
 \begin{frame}{¿Por qu\'e no siempre podemos usar MDPs cl\'asicos?}
-El paradigma de MDP es potente, pero enfrentamos barreras cr\'iticas al aplicarlo en la industria:
 
 \begin{itemize}
-    \item \textbf{Incertidumbre en los Par\'ametros:} 
-    En un e-commerce (precificaci\'on), no conocemos la probabilidad real de que un cliente acepte un precio. 
+    \item Si gestionamos un inventario de 100 productos, \textquestiondown c\'omo ser\'a el espacio de estados? \textquestiondown Cu\'anto tiempo y espacio se necesitar\'a para calcular y almacenar $V^*$?
     
-    \item<2-> \textbf{Observabilidad Parcial:} 
-    En la gesti\'on de relaciones con clientes (CRM), el ">estado emocional"< del cliente no se ve. Solo tenemos indicadores ruidosos (clics, quejas).
+    \item<2-> En un e-commerce (precificaci\'on), no conocemos la probabilidad real de que un cliente acepte un precio, y puede cambiar con el tiempo. 
     
-    \item<3-> \textbf{La Maldici\'on de la Dimensionalidad:} 
-    Si gestionamos un inventario de 100 productos, \textquestiondown c\'omo ser\'a el espacio de estados? \textquestiondown Cu\'anto tiempo y espacio se necesitar\'a para calcular y almacenar $V^*$?
+    \item<3-> En la gesti\'on de relaciones con clientes (CRM), el estado emocional del cliente no se ve. Solo tenemos indicadores ruidosos (clics, quejas).
 \end{itemize}
 
-\begin{alertblock}{El quiebre del modelo}<4->
-    Cuando las reglas ($P, r$) son desconocidas o el espacio es inabarcable, la Programaci\'on Din\'amica tradicional falla.
-\end{alertblock}
+
 \end{frame}
 
 % --- SLIDE: HACIA EL REINFORCEMENT LEARNING ---
-\begin{frame}{Desaf\'ios y sus Soluciones Modernas}
-        \begin{block}{1. Informaci\'on Parcial}
-            \small No conocemos $P(s'|s,a)$ ni $r(s,a)$.
+\begin{frame}{Desaf\'ios y Soluciones}
+
+        \begin{block}{1. La Maldici\'on de la Dimensionalidad}
+            \small Crecimiento exponencial en el n\'umero  de estados y/o acciones.
+
             \vspace{0.2cm}
+           \visible<2->{ \textbf{\textcolor{red}{Soluci\'on: Generalizaci\'on}} \\
+            En lugar de tablas, empleamos arquitecturas de aproximaci\'on (como redes neuronales) para representar las funci\'ones de valor y/o pol\'itica.}
+        \end{block}
+        \begin{block}{2. Informaci\'on Parcial}
+            \small No conocemos $P(s'|s,a)$ ni $r(s,a)$.
+
+            \vspace{0.2cm}
+\visible<3->{
             \textbf{\textcolor{red}{Soluci\'on: Aprendizaje}} \\
-            El agente debe interactuar con el entorno y aprender de la experiencia (\textbf{RL}).
+            El agente debe interactuar con el entorno y aprender de la experiencia (\textbf{RL}).}
         \end{block}
         
-        \begin{block}{2. Estados Ocultos}
-            \small El estado real no es visible.
+        \begin{block}{3. Estados Ocultos}
+            \small El estado real no es visible, solo observacions relacionadas.
+
             \vspace{0.2cm}
+\visible<4->{
             \textbf{\textcolor{red}{Soluci\'on: POMDPs}} \\
-            Actuar en el espacio de probabilidades de estados.
+            Actuar en el espacio de probabilidades de estados.}
         \end{block}
 
-        \begin{block}{3. Complejidad Masiva}
-            \small Millones de estados o acciones continuas.
-            \vspace{0.2cm}
-            \textbf{\textcolor{red}{Soluci\'on: Generalizaci\'on}} \\
-            En lugar de tablas, empleamos arquitecturas de aproximaci\'on (como redes neuronales) para representar las funci\'ones de valor y/o pol\'itica.
-        \end{block}
+
 
 \end{frame}
 
 \begin{frame}{Desafío: Incertidumbre y Datos}
 \begin{itemize}
-    \item Hasta ahora, dependíamos de $P$ y $r$. ¿Qué sucede cuando las reglas del mundo son desconocidas o demasiado complejas para modelar?
+    \item Hasta ahora, dependíamos de $P$ y $r$. ¿Qué sucede cuando las reglas del ambiente son desconocidas o demasiado complejas para modelar?
     
-    \item<2-> \textbf{La Propuesta:} ">Aprender"< la política óptima directamente a partir de la \textbf{interacción} con el ambiente.
-
-    \item<3-> \textbf{¿Con qué datos contamos?} En lugar de matrices, usamos experiencias:
-    \begin{itemize}
-        \item<4-> \textbf{Trayectorias:} Secuencias temporales de estados y acciones.
-        \begin{itemize}
-            \item<4-> Única (horizonte largo): $(x_0, a_0, r_0, x_1, a_1, r_1, \dots)$
-            \item<5-> Múltiples (episodios): $\{(x_0^i, a_0^i, r_0^i, \dots, x_T^i)\}_{i=1}^M$
-        \end{itemize}
-        \item<6-> \textbf{Tuplas (Transiciones):} Conjuntos de experiencias aisladas $(x, a, r, y)$. 
-    \end{itemize}
+    \item<2-> \textbf{La Propuesta:} Aprender la política óptima directamente a partir de la \textbf{interacción} con el ambiente.
 \end{itemize}
 
 \vspace{-0.2cm}
@@ -108,9 +115,24 @@ El paradigma de MDP es potente, pero enfrentamos barreras cr\'iticas al aplicarl
 \mode<beamer>{
 \only<2,3>{\includegraphics[width=0.35\textwidth]{../Images/LearningCycle/RL2.jpg}} 
 \only<4>{\includegraphics[width=0.35\textwidth]{../Images/LearningCycle/LearningCycle1.jpg}}  
-\only<5>{\includegraphics[width=0.35\textwidth]{../Images/LearningCycle/LearningCycle2.jpg}} 
-\only<6->{\includegraphics[width=0.35\textwidth]{../Images/LearningCycle/LearningCycle3.jpg}}} 
+\only<5>{\includegraphics[width=0.35\textwidth]{../Images/LearningCycle/LearningCycle2.jpg}} }
+\only<6->{\includegraphics[width=0.35\textwidth]{../Images/LearningCycle/LearningCycle3.jpg}} 
 \end{center}
+\end{frame}
+
+\begin{frame}{Desafío: Incertidumbre y Datos}
+\begin{itemize}
+    \item \textbf{¿Con qué datos contamos?} 
+    \begin{itemize}
+        \item<2-> \textbf{Trayectorias:} Secuencias temporales de estados y acciones.
+        \begin{itemize}
+            \item<3-> Única (horizonte largo): $(x_0, a_0, r_0, x_1, a_1, r_1, \dots)$
+            \item<4-> Múltiples (episodios): $\{(x_0^i, a_0^i, r_0^i, \dots, x_T^i)\}_{i=1}^M$
+        \end{itemize}
+        \item<5-> \textbf{Tuplas (Transiciones):} Conjuntos de experiencias aisladas $(x, a, r, y)$. 
+    \end{itemize}
+\item Al contrario del aprendizaje supervisado, no tenemos observaciones de la funci\'on de valor o de la funci\'on pol\'itica.
+\end{itemize}
 \end{frame}
 
 \begin{frame}{Model-Based vs. Model-Free RL}
@@ -151,45 +173,42 @@ El paradigma de MDP es potente, pero enfrentamos barreras cr\'iticas al aplicarl
 
 % --- SLIDE: ¿CUÁNDO ES ATRACTIVO EL MODELO? ---
 \begin{frame}{¿Cu\'ando es atractivo el enfoque Model-Based?}
-Construir un \textbf{Modelo del Ambiente} suele ser la mejor opci\'on cuando el sistema posee una estructura que podemos explotar:
+
 
 \begin{itemize}
-    \item<2-> \textbf{Estructura y Ejemplos:}
+    \item<1->Cuando el sistema posee una \textbf{estructura} que podemos explotar:
     \begin{itemize}
-        \item<3-> \textbf{Modelos Param\'etricos:} Ecuaciones de la f\'isica o econometr\'ia (ej. leyes de Newton, Black-Scholes). Pocos par\'ametros para estimar.
-        \item<4-> \textbf{Digital Twins:} R\'eplicas digitales de alta fidelidad de activos f\'isicos (ej. una turbina e\'olica o una red el\'ectrica).
-        \item<5-> \textbf{Simuladores Estoc\'asticos:} Modelos de eventos discretos o Monte Carlo para log\'istica y colas.
+        \item<2-> \textbf{Modelos Param\'etricos:} Ecuaciones de la f\'isica o econometr\'ia (ej. leyes de Newton, Black-Scholes). Pocos par\'ametros para estimar.
+        \item<3-> \textbf{Digital Twins:} R\'eplicas digitales de alta fidelidad de activos f\'isicos (ej. una turbina e\'olica o una red el\'ectrica).
+        \item<4-> \textbf{Simuladores Estoc\'asticos:} Modelos de eventos discretos o Monte Carlo para log\'istica y colas.
     \end{itemize}
 
-    \item<6-> \textbf{Sistemas Cr\'iticos (Seguridad):} En medicina o energ\'ia, el costo de "fallar" es infinito. El modelo permite \textbf{testeo offline} y simulaciones de escenarios catastr\'oficos.
-    
-    \item<7-> \textbf{Eficiencia de Muestra:} La ventaja nace de la \textbf{estructura}. El modelo nos permite inferir estados nunca visitados generalizando informaci\'on de otros estados mediante la l\'ogica del sistema.
+    \item<5-> \textbf{Sistemas Cr\'iticos (Seguridad):} Cuando el costo de fallar es demasiado alto, el modelo permite \textbf{testeo offline} y simulaciones de escenarios catastr\'oficos.
 \end{itemize}
+    \only<6->{ \begin{block}{Eficiencia de Uso de Datos:} 
+Al tener estructura, el modelo nos permite inferir estados nunca visitados generalizando informaci\'on de otros estados mediante la l\'ogica del sistema.\end{block}}
 \end{frame}
 
 % --- SLIDE: VENTAJAS DEL ENFOQUE MODEL-FREE ---
-\begin{frame}{Aprendizaje por Refuerzo Directo (Model-Free)}
-\small % Reducimos ligeramente el tamaño general para asegurar el ajuste
+\begin{frame}{¿Cu\'ando es atractivo el enfoque Model-Free?}
 \begin{itemize}
-    \item<1-> \textbf{Independencia del Modelo:} Aprendemos la política \textbf{mientras se actúa}, sin fijar la dinámica del ambiente.
+    \item<1-> Cuando es necesario aprender o actualizar la la política \textbf{mientras se actúa}.
     \begin{itemize}
-        \item \textit{Dinámicas cambiantes:} Ideal para entornos no estacionarios (mercados, recomendación a usuarios).
+        \item \textbf{Dinámicas cambiantes:} Ideal para entornos no estacionarios (mercados, recomendación a usuarios).
     \end{itemize}
 
-    \item<2-> \textbf{Robustez:} Evitamos el riesgo de \textbf{sesgo del modelo} (\textit{model bias}) al no imponer estructuras paramétricas rígidas.
-
-    \item<3-> \textbf{Interacción con ">Cajas Negras"<:} Esencial cuando el modelo es un \textbf{simulador} complejo.
+    \item<3-> Cuando interactuamos con \textbf{ambientes complejos}, dif\'iciles de modelar:
     \begin{itemize}
-        \item No accedemos a $P$ o $r$; solo observamos transiciones.
-        \item \textit{Ejemplos:} Videojuegos, procesos industriales, clima.
+        \item Ejemplos: Videojuegos, procesos industriales, clima.
     \end{itemize}
 
-    \item<4-> \textbf{Escalabilidad:} Permite el uso de \textit{Function Approximation} (redes neuronales) para manejar espacios de estados donde la Programación Dinámica tradicional colapsa.
 \end{itemize}
 
-\begin{exampleblock}{En resumen}<5->
-    Model-Free es preferible cuando la  complejidad del sistema impide su modelado o cuando la fidelidad a la experiencia real prima sobre la eficiencia de datos.
-\end{exampleblock}
+
+    \only<4->{\begin{block}{Aprendizaje Directo de Valor y/o Pol\'itica}
+El aprendizaje por refuerzo model-free permite aprender buenas decisiones directamente de la experiencia, sin tener que construir explícitamente un modelo de la dinámica del sistema.\end{block}}
+
+
 \end{frame}
 
 % --- SLIDE: COMPARATIVA Y SÍNTESIS ---
@@ -204,8 +223,8 @@ Construir un \textbf{Modelo del Ambiente} suele ser la mejor opci\'on cuando el 
 \end{tabular}
 \end{center}
 
-\begin{alertblock}{La Confluencia: RL como Soluci\'on de Bellman}<2->
-    Incluso con un modelo perfecto, la \textbf{maldici\'on de la dimensionalidad} puede impedir resolver Bellman de forma exacta. En esos casos, usamos algoritmos de RL no para aprender el mundo, sino como un m\'etodo de \textbf{programaci\'on din\'amica aproximada}.
+\begin{alertblock}{RL como Soluci\'on de la Ecuaci\'on de Bellman}<2->
+    Incluso con un modelo perfecto, la \textbf{maldici\'on de la dimensionalidad} puede impedir resolver la ecuaci\'on de Bellman de forma exacta. En esos casos, usamos algoritmos de RL no para aprender el mundo, sino como un m\'etodo de \textbf{programaci\'on din\'amica aproximada}.
 \end{alertblock}
 \end{frame}
 
@@ -228,8 +247,8 @@ Construir un \textbf{Modelo del Ambiente} suele ser la mejor opci\'on cuando el 
         every node/.style={draw, thick, rounded corners, inner sep=4pt, font=\scriptsize, align=center},
         arrow/.style={-stealth, thick}
     ]
-      \node (politica) [fill=blue!10] {\textbf{ACTOR}\\(Pol\'itica $u_\psi$)};
-      \node (valor) [below of=politica, fill=green!10] {\textbf{CR\'ITICO}\\(Valor $\hat V^{u_\psi}$)};
+      \node (politica) [fill=blue!10] {\textbf{ACTOR}\\Pol\'itica $u_\psi$};
+      \node (valor) [below of=politica, fill=green!10] {\textbf{CR\'ITICO}\\Valor $\hat V^{u_\psi}$};
       
       \draw [arrow, bend left=30] (politica) to node[right, draw=none, font=\tiny] {Evaluaci\'on} (valor);
       \draw [arrow, bend left=30] (valor) to node[left, draw=none, font=\tiny] {Mejora} (politica);
@@ -237,11 +256,6 @@ Construir un \textbf{Modelo del Ambiente} suele ser la mejor opci\'on cuando el 
     \end{column}
 \end{columns}
 
-\vspace{0.4cm}
-
-\begin{alertblock}{Foco del Curso}<2->
-    Nos concentraremos en \textbf{M\'etodos de Valor}, la base para entender c\'omo "resolver Bellman" a partir de datos.
-\end{alertblock}
 \end{frame}
 
 % --- SLIDE 2: BREVE RECORRIDO (POLICY & AC) ---
@@ -252,20 +266,18 @@ Construir un \textbf{Modelo del Ambiente} suele ser la mejor opci\'on cuando el 
     \begin{itemize}
         \item Se define $\hat{u}(x) = u(x, \psi)$ (ej: comprar si stock $<\psi_1$).
         \item Se ajusta $\psi$ usando \textit{gradiente estocástico} para maximizar el retorno esperado.
-        \item \textbf{Pros:} Natural para acciones continuas; \textbf{Contras:} Alta varianza en el aprendizaje.
     \end{itemize}
     
     \vspace{0.2cm}
     \item \textbf{Métodos Actor-Crítico:}
     \begin{itemize}
-        \item El \textbf{Actor} propone la acción y el \textbf{Crítico} (basado en valor) evalúa si fue buena.
-        \item Es el estándar en RL moderno (Deep RL) porque combina la estabilidad del valor con la flexibilidad de la política.
+        \item El \textbf{Actor} propone la acción y el \textbf{Crítico}  evalúa su valor.
+\item Se utiliza nuevamente una forma param\'etrica $\hat{u}(x) = u(x, \psi)$ para la pol\'itica
+\item Se aproxima el valor de la pol\'itica para ayudar en la estimativa del gradiente estoc\'astico.
     \end{itemize}
 \end{itemize}
 
-\begin{exampleblock}{¿Por qué mencionarlos?}<2->
-    Aunque no los aplicaremos, entender que existen permite saber cuándo Q-Learning es suficiente y cuándo se requiere un esquema más complejo.
-\end{exampleblock}
+
 \end{frame}
 
 % --- SLIDE 3: TEMARIO ESPECÍFICO ---
@@ -273,18 +285,16 @@ Construir un \textbf{Modelo del Ambiente} suele ser la mejor opci\'on cuando el 
 En este módulo, profundizaremos en los métodos basados en valor:
 
 \begin{itemize}
-    \item<1-> \textbf{TD-Learning (Temporal Difference):} Cómo aprender de la experiencia paso a paso sin esperar al final de la trayectoria.
-    \item<2-> \textbf{Q-Learning:} El algoritmo ">off-policy"< por excelencia para aprender la acción óptima de forma directa.
-    \item<3-> \textbf{Arquitecturas de Aproximación:} 
+\item \textbf{Monte Carlo}: Evaluaci\'on de pol\'iticas por simulaci\'on de trayectorias
+    \item<2-> \textbf{TD-Learning (Temporal Difference):} Cómo aprender de la experiencia paso a paso sin esperar al final de la trayectoria (Monte Carlo con bootstrapping).
+    \item<3-> \textbf{Q-Learning:} El algoritmo ">off-policy"< por excelencia para aprender la acción óptima de forma directa.
+    \item<4-> \textbf{Arquitecturas de Aproximación:} 
     \begin{itemize}
         \item ¿Qué pasa cuando el estado es continuo o gigante? 
         \item Veremos \textbf{Longstaff-Schwartz} como un caso de éxito de aproximación en finanzas (opciones americanas).
     \end{itemize}
 \end{itemize}
 
-\begin{center}
-\textbf{Idea Clave:} Usaremos RL como un \textit{solver} iterativo de la Ecuación de Bellman.
-\end{center}
 \end{frame}
 
 \begin{frame}{Estimación de La Función Valor}
@@ -315,6 +325,45 @@ $$V^*(x) =  \max\limits_{a \in A} \left\{r_a(x)+\alpha \sum_y P_a(x,y) V^*(y)\ri
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Ejemplo: Ruta de Casa a La Universidad}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{../Images/Figures/mapa.jpg}
+\end{center}
+\end{frame}
+\begin{frame}{Ejemplo: Ruta de Casa a La Universidad}
+\begin{itemize}
+\item Modelo MDP:
+\begin{itemize}
+\item<2-> Estado = posición en el mapa, en las esquinas
+$x = (i,j)$
+\item<3-> Acciones = desplazamiento, una cuadra por vez: 
+$$
+A = \left\{(0,1),(0,-1),(-1,0),(1,0)\right\} \equiv \left\{{\rm N}, {\rm S}, {\rm O}, {\rm E}\right\}
+$$
+\item<4-> Transición (determinística):
+$$
+x_{t+1} = \begin{cases}
+x+a & {\rm if~}x_t \neq x^* \\
+x^* & {\rm if~}x_t = x^*
+\end{cases}
+$$
+\item<5-> Recompensa (castigo, en este caso):
+$$
+r_a(x) = 
+\begin{cases} {\rm E}_w\left[tiempo(x,x+a,w)\right] & {\rm if}~ x \neq x^*\\
+0 & {\rm if}~ x = x^*
+\end{cases}
+$$
+\item<6-> Criterio de optimalidad:
+
+\vspace{-0.5cm}
+$$
+\min_u {\rm E}\left[\sum\limits_{t=0}^\infty r_u(x_t)\right].
+$$
+\end{itemize}
+\item<7-> Implementación en Python de Monte Carlo
+\end{itemize}
+\end{frame}
 % --- SLIDE: BOOTSTRAPPING ---
 \begin{frame}{Del Retorno al Bootstrapping}
 \begin{itemize}
@@ -348,14 +397,14 @@ $$V^*(x) =  \max\limits_{a \in A} \left\{r_a(x)+\alpha \sum_y P_a(x,y) V^*(y)\ri
 \end{block}
 
 \begin{itemize}
-    \item<2-> \textbf{Visi\'on Te\'orica:} TD-learning es la versi\'on \textbf{estoc\'astica} de la Iteraci\'on de Valor. En promedio, la actualizaci\'on sigue la direcci\'on de la ecuaci\'on de Bellman.
+    \item<2-> \textbf{Visi\'on Te\'orica:} En cada iteraci\'on, se actualiza la funci\'on valor solo para el estado visitado  En promedio, la actualizaci\'on aproxima la direcci\'on de la ecuaci\'on de Bellman.
     \item<3-> \textbf{Ventaja Cr\'itica:} No necesitamos trayectorias completas. Podemos aprender de fragmentos sueltos de experiencia o de transiciones individuales de estado.
 \end{itemize}
 \end{frame}
 
 % --- SLIDE: DE MRP A MDP ---
 \begin{frame}{De la Evaluaci\'on a la Optimizaci\'on}
-Hemos visto que TD-Learning converge a $V_u$ para un proceso con política fija (MRP). ¿Podemos extender esto para encontrar la política óptima $V^*$?
+TD-Learning converge a $V_u$ para un proceso con política fija (MRP). ¿Podemos extender esto para encontrar la política óptima $V^*$?
 
 \begin{itemize}
     \item<2-> \textbf{La Extensi\'on Natural:} En un MDP, el objetivo es satisfacer la ecuaci\'on de Bellman de optimalidad:
@@ -378,7 +427,7 @@ Hemos visto que TD-Learning converge a $V_u$ para un proceso con política fija 
 \begin{center}
 \scalebox{0.85}{
 \begin{tikzpicture}[
-    node distance=3.5cm, 
+    node distance=5cm, 
     every node/.style={draw, thick, rounded corners, inner sep=8pt, font=\small, align=center},
     arrow/.style={-stealth, ultra thick}
 ]
@@ -388,7 +437,7 @@ Hemos visto que TD-Learning converge a $V_u$ para un proceso con política fija 
   
   \draw<1-2> [arrow] (data) -- (valor);
   \draw<3> [arrow] (data) -- node[midway, above, font=\scriptsize, draw=none] {1. Aprender $V$} (valor);
-  \draw<4-> [arrow] (data) -- node[midway, above, font=\scriptsize, draw=none] {1} (valor);
+ % \draw<4-> [arrow] (data) -- node[midway, above, font=\scriptsize, draw=none] {1} (valor);
   \draw<4-> [arrow] (valor) -- node[midway, above, font=\scriptsize, draw=none] {2. ¿C\'omo?} (politica);
 \end{tikzpicture}}
 \end{center}
@@ -408,10 +457,10 @@ La funci\'on $Q^*(x,a)$ representa el valor de tomar la acci\'on $a$ en el estad
     \item \textbf{Definici\'on:} 
     \[ Q^*(x,a) = r_a(x) + \alpha \sum_y P_a(x,y) V^*(y) \]
     
-    \item<2-> \textbf{Relaci\'on con $V^*$:} Como $V^*(x) = \max_a Q^*(x,a)$, podemos reescribir Bellman:
+    \item<2-> Como $V^*(x) = \max_a Q^*(x,a)$, podemos reescribir Bellman:
     \[ Q^*(x,a) = r_a(x) + \alpha \sum_y P_a(x,y) \max_{a' \in A} Q^*(y,a') \]
     
-    \item<3-> \textbf{La gran ventaja:} Con una aproximaci\'on $\hat Q$, la pol\'itica es \textbf{directa}:
+    \item<3->  Con una aproximaci\'on $\hat Q$, la pol\'itica es \textbf{directa}:
     \[ \hat u(x) = \arg\max_{a \in A} \hat Q(x,a) \]
     \textit{¡No necesitamos conocer las probabilidades de transici\'on $P$!}
 \end{itemize}
@@ -442,31 +491,30 @@ La implementaci\'on exitosa de Q-Learning exige una sinton\'ia fina. No basta co
     \item \textbf{Tasa de Aprendizaje ($\gamma$):} 
     Controla el balance entre la \textbf{memoria} (lo aprendido) y la \textbf{novedad} (la muestra actual). Determina la estabilidad frente al ruido.
     
-    \item \textbf{Selecci\'on de la Acci\'on:} 
-    Resuelve el dilema de \textbf{Exploraci\'on vs. Explotaci\'on}. ¿Usamos lo que ya funciona o buscamos algo mejor?
+    \item \textbf{Exploraci\'on vs. Explotaci\'on}
+    ¿Qu\'e acciones debemos elegir? ¿Usamos lo que ya funciona o buscamos algo mejor?
     
     \item \textbf{Desaf\'ios de Ingenier\'ia:} 
     Incluso con par\'ametros óptimos, enfrentaremos problemas de sesgo, correlaci\'on y escasez de recompensas.
 \end{itemize}
 
-\begin{alertblock}{Lecci\'on de Experiencia}
-    La mayor\'ia de las fallas en proyectos de RL no est\'an en el algoritmo, sino en una mala calibraci\'on de estos pilares.
-\end{alertblock}
 \end{frame}
 % --- SLIDE 1: EL DILEMA ---
-\begin{frame}{Exploraci\'on: ¿Costo o Estrategia?}
+\begin{frame}{Exploraci\'on vs Explotaci\'on}
 Para que $\hat Q \to Q^*$, el agente debe \textbf{explorar suficientemente} el espacio de acciones. 
 
 \begin{itemize}
-    \item \textbf{Eficiencia:} El azar puro garantiza convergencia, pero es computacionalmente lento.
+
+\item En principio, podemos tomar acciones aleatorias, en estados aleatorios, y la convergencia est\'a garantizada.
+
+    \item<2-> \textbf{Eficiencia:} El azar puro garantiza convergencia, pero es computacionalmente lento.
     
-    \item \textbf{Online Learning (En Vivo):}
+    \item<3-> \textbf{Online Learning (En Vivo):}
     Dilema econ\'omico: explorar es costoso (p\'erdida de recompensa real).
 
-    \item \textbf{Offline Learning (Simulador):}
-    Problema de cobertura: explorar asegura "iluminar" regiones clave de la tabla $Q$.
 \end{itemize}
 
+\visible<4->{
 \begin{block}{La Pol\'itica $\epsilon$-greedy}
 Equilibrio base entre búsqueda y aprovechamiento:
 \[
@@ -475,7 +523,7 @@ a_t = \begin{cases}
 \text{acci\'on aleatoria} & \text{con prob. } \epsilon \ (\text{Exploraci\'on})
 \end{cases}
 \]
-\end{block}
+\end{block}}
 \end{frame}
 
 % --- SLIDE 2: MÁS ALLÁ DE EPSILON-GREEDY ---
@@ -486,7 +534,7 @@ $\epsilon$-greedy explora a ciegas. Alternativas para problemas complejos:
     \item \textbf{Exploraci\'on de Boltzmann (Softmax):}
     Selecci\'on probabil\'istica seg\'un el valor estimado:
     \[ P(a|x) \propto e^{Q(x,a)/\tau} \]
-    Evita acciones desastrosas al priorizar opciones "casi-\'optimas".
+    Evita acciones desastrosas al priorizar opciones casi-\'optimas.
 
     \item \textbf{Optimismo (UCB / Initial Values):}
     Inicializar $Q$ con valores muy altos. Fuerza la exploraci\'on inicial hasta que la realidad corrige las expectativas.
@@ -505,25 +553,26 @@ Podemos reescribir la actualizaci\'on de Q-Learning para ver c\'omo $\gamma$ pon
 \]
 
 \begin{itemize}
-    \item \textbf{$\gamma$ alto (ej: 0.5):} 
+    \item <2->\textbf{$\gamma$ alto (ej: 0.5):} 
     \begin{itemize}
         \item \textit{Ventaja:} El algoritmo incorpora informaci\'on nueva r\'apidamente.
         \item \textit{Riesgo:} Alta \textbf{varianza}. Si las muestras son ruidosas, $Q$ oscilar\'a sin converger.
     \end{itemize}
-    \item \textbf{$\gamma$ bajo (ej: 0.01):} 
+    \item<3-> \textbf{$\gamma$ bajo (ej: 0.01):} 
     \begin{itemize}
         \item \textit{Ventaja:} Estable ante el ruido; act\'ua como un filtro de media m\'ovil.
         \item \textit{Riesgo:} Aprendizaje muy lento (\textit{estancamiento}).
     \end{itemize}
 \end{itemize}
 
+\visible<4->{
 \begin{alertblock}{En la pr\'actica}
     Si el entorno es \textbf{no estacionario} (cambiante), nunca debemos llevar $\gamma$ a cero, o el agente dejar\'a de notar los cambios en el sistema.
-\end{alertblock}
+\end{alertblock}}
 \end{frame}
 
 % --- SLIDE: INTRODUCCIÓN TEMAS AVANZADOS ---
-\begin{frame}{Desaf\'ios en la Pr\'actica (Temas Avanzados)}
+\begin{frame}{[Temas Avanzados] Desaf\'ios en la Pr\'actica}
 Aplicar Q-Learning tabular a problemas reales suele fallar por tres motivos:
 \begin{enumerate}
     \item \textbf{Escasez de Se\~nal:} El agente no encuentra recompensas (sparse rewards).
@@ -531,9 +580,6 @@ Aplicar Q-Learning tabular a problemas reales suele fallar por tres motivos:
     \item \textbf{Sobreestimaci\'on:} El ruido hace que el agente sea "demasiado optimista".
 \end{enumerate}
 
-\begin{center}
-\textit{Las siguientes diapositivas presentan soluciones de ingeniería para estos retos.}
-\end{center}
 \end{frame}
 
 % --- SLIDE: TEMAS AVANZADOS: REWARD SHAPING ---
@@ -587,9 +633,6 @@ El paso de la programaci\'on din\'amica al aprendizaje por refuerzo implica gest
     \item \textbf{Pensamiento de Diseño:} Como cient\'ificos, nuestro rol es dise\~nar incentivos (recompensas) y estructuras que permitan que la raz\'on sirva a la existencia del agente en entornos complejos.
 \end{itemize}
 
-\begin{center}
-    \textbf{Pr\'oximamente:} La maldici\'on de la dimensionalidad y aproximaci\'on de funciones.
-\end{center}
 \end{frame}
 
 % --- SLIDE 2: REVISIÓN AGENTE/AMBIENTE ---
@@ -720,7 +763,7 @@ $519643907259916015628128546089888314427129715319$
 
 $317557736620397247064859013377169378226061371114$
 
-$670302056198056 \approx 2 \times 10^{170}$ configuraciones v\'alidas
+$670302056198056 \approx \mathbf{2 \times 10^{170}}$ \textbf{configuraciones v\'alidas}
 \end{itemize}
 \end{itemize}
 
@@ -733,21 +776,20 @@ $670302056198056 \approx 2 \times 10^{170}$ configuraciones v\'alidas
 % --- SLIDE 1: EL PROBLEMA — LA MALDICIÓN DE LA DIMENSIONALIDAD ---
 \begin{frame}{La “Maldici\'on de la Dimensionalidad”}
 \begin{itemize}
-    \item \textbf{Causa Ra\'iz:} El n\'umero de estados crece \textbf{exponencialmente} respecto al n\'umero de variables ($C^N$).
-    \item \textbf{Inviabilidad Tabular:} En problemas reales (Go, Inventarios, Finanzas), el espacio de b\'usqueda es tan vasto que no se puede visitar, calcular ni almacenar.
+    \item  El n\'umero de estados crece \textbf{exponencialmente} respecto al n\'umero de variables de estado.
+    \item En problemas reales (Go, Inventarios, Finanzas), el espacio de b\'usqueda es tan vasto que no se puede visitar, calcular ni almacenar.
 \end{itemize}
 
+\visible<2->{
 \begin{exampleblock}{Ejemplo: Control de Inventarios (10 productos)}
     Si cada producto tiene 100 niveles de stock:
     \begin{itemize}
-        \item Estados posibles: $100^{10} = 10^{20}$ (m\'as que granos de arena en la Tierra).
-        \item \textbf{El error de la tabla:} Trata "99 unidades" como algo totalmente distinto a "100 unidades". No hay transferencia de conocimiento.
+        \item Estados posibles: $100^{10} = 10^{20}$.
+        \item \textbf{El error de la tabla:} Trata 99 unidades como algo totalmente distinto a 100 unidades. No hay transferencia de conocimiento.
     \end{itemize}
-\end{exampleblock}
+\end{exampleblock}}
 
-\begin{center}
-    \textit{Si el espacio de estados es prohibitivo, la memoria debe ser reemplazada por la intuici\'on.}
-\end{center}
+\visible<3-> {\begin{center}\textbf{Si el espacio de estados es prohibitivo, la memoria debe ser reemplazada por la generalizaci\'on.}\end{center}}
 \end{frame}
 
 % --- SLIDE 2: LA SOLUCIÓN — APROXIMACIÓN Y GENERALIZACIÓN ---
@@ -764,12 +806,12 @@ $670302056198056 \approx 2 \times 10^{170}$ configuraciones v\'alidas
 
 \only<3->{
 \begin{block}{Cambio de Paradigma}
-    Ya no buscamos el valor exacto de cada casilla, sino los \textbf{pesos} $\theta$ que mejor describen la \textbf{estructura} del problema.
+    Ya no buscamos el valor exacto de cada casilla, sino los \textbf{pesos} $\theta$ que mejor describen la \textbf{estructura} de la funci\'on de valor $V$ o $Q$.
 \end{block}}
 
-\begin{itemize}
-    \item<4-> \textit{Nota:} Tambi\'en podemos parametrizar la pol\'itica $u(x,a,\theta_u)$ como una distribuci\'on de probabilidad.
-\end{itemize}
+%\begin{itemize}
+%    \item<4-> \textit{Nota:} Tambi\'en podemos parametrizar la pol\'itica $u(x,a,\theta_u)$ como una distribuci\'on de probabilidad.
+%\end{itemize}
 \end{frame}
 
 
@@ -784,7 +826,7 @@ $670302056198056 \approx 2 \times 10^{170}$ configuraciones v\'alidas
   every node/.style={font=\small},
   input/.style={draw, rectangle, minimum width=1.5cm, minimum height=0.8cm, fill=gray!10, rounded corners},
   func/.style={draw, circle, minimum size=1.1cm, fill=white},
-  output/.style={draw, rectangle, minimum width=2.5cm, minimum height=0.9cm, fill=blue!10, thick},
+  output/.style={draw, rectangle, minimum width=2.5cm, minimum height=0.9cm,  fill=gray!10, rounded corners},
   weight/.style={font=\footnotesize, blue!80!black}
 ]
 
@@ -795,7 +837,7 @@ $670302056198056 \approx 2 \times 10^{170}$ configuraciones v\'alidas
 \node[func, right=of state]               (f2) {$\phi_2(x)$};
 \node[func, right=of state, yshift=-1.5cm] (fk) {$\phi_K(x)$};
 
-\node[output, right=of f2] (value) {Valor $\hat{V}(x, \theta)$};
+\node[output, right=of f2] (value) {Valor $\hat{V}(x, \theta) = \sum_{i=1}^K \theta_i \phi_i(x)$};
 
 % Lines from state to features
 \draw[->] (state.east) -- (f1.west);
@@ -808,10 +850,10 @@ $670302056198056 \approx 2 \times 10^{170}$ configuraciones v\'alidas
 \draw[->] (fk.east) -- (value.west) node[midway, above, weight] {$\theta_K$};
 
 % Main Formula
-\node[above=0.2cm of value] {\small $\hat{V}(x, \theta) = \sum_{i=1}^K \theta_i \phi_i(x)$};
+%\node[above=0.2cm of value] {\small $\hat{V}(x, \theta) = \sum_{i=1}^K \theta_i \phi_i(x)$};
 \end{tikzpicture}
 \end{center}
-\item<3-> Esto se llama \textbf{aproximación lineal en los parámetros} (aunque \( f_i(x) \) puede ser no lineal en $x$)
+\item<3-> La aproximaci\'on es  \textbf{lineal en los parámetros $\mathbf{\theta}$} (aunque \( \phi_i(x) \) normalmente son no lineales en $x$)
 \end{itemize}
 \end{frame}
 
@@ -825,7 +867,7 @@ $670302056198056 \approx 2 \times 10^{170}$ configuraciones v\'alidas
   every node/.style={font=\small},
   input/.style={draw, rectangle, minimum width=1.5cm, minimum height=0.8cm, fill=gray!10, rounded corners},
   func/.style={draw, circle, minimum size=1.1cm, fill=white},
-  output/.style={draw, rectangle, minimum width=2.5cm, minimum height=0.9cm, fill=blue!10, thick},
+  output/.style={draw, rectangle, minimum width=2.5cm, minimum height=0.9cm,  fill=gray!10, rounded corners},
   weight/.style={font=\footnotesize, blue!80!black}
 ]
 
@@ -836,7 +878,7 @@ $670302056198056 \approx 2 \times 10^{170}$ configuraciones v\'alidas
 \node[func, right=of state]               (f2) {$\phi_2(x)$};
 \node[func, right=of state, yshift=-1.5cm] (fk) {$\phi_K(x)$};
 
-\node[output, right=of f2] (value) {Valor $\hat{V}(x, \theta)$};
+\node[output, right=of f2] (value) {Valor $\hat{V}(x, \theta) = \sum_{i=1}^K \theta_i \phi_i(x)$};
 
 % Lines from state to features
 \draw[->] (state.east) -- (f1.west);
@@ -849,7 +891,7 @@ $670302056198056 \approx 2 \times 10^{170}$ configuraciones v\'alidas
 \draw[->] (fk.east) -- (value.west) node[midway, above, weight] {$\theta_K$};
 
 % Main Formula
-\node[above=0.2cm of value] {\small $\hat{V}(x, \theta) = \sum_{i=1}^K \theta_i \phi_i(x)$};
+%\node[above=0.2cm of value] {\small $\hat{V}(x, \theta) = \sum_{i=1}^K \theta_i \phi_i(x)$};
 \end{tikzpicture}
 \end{center}
 \begin{itemize}
@@ -907,7 +949,7 @@ $670302056198056 \approx 2 \times 10^{170}$ configuraciones v\'alidas
 \centering
 
 % Iniciamos un grupo para que el tamaño reducido solo afecte a la tabla
-{\tiny 
+{\tiny
 \setlength{\tabcolsep}{2pt}
 \begin{tabular}{|l|c|c|c|c|}
 \hline
@@ -925,7 +967,7 @@ $670302056198056 \approx 2 \times 10^{170}$ configuraciones v\'alidas
 \begin{alertblock}{Dependencia de Par\'ametros}
     La distinci\'on \textbf{Lineal / No Lineal} define si el valor es una combinaci\'on lineal de los par\'ametros $\theta$, independientemente de $x$.
     \begin{itemize}
-        \item Un modelo ">No Lineal Manual"< inyecta estructura experta donde $\theta$ no act\'ua como un simple peso.
+  \item Un modelo No Lineal Manual inyecta estructura experta donde $\theta$ no act\'ua como un simple peso.
     \end{itemize}
 \end{alertblock}
 \end{frame}
@@ -965,7 +1007,7 @@ $670302056198056 \approx 2 \times 10^{170}$ configuraciones v\'alidas
 \end{block}
 \end{frame}
 
-\begin{frame}{RL con Aproximaci\'on: El Residuo de Bellman}
+\begin{frame}{RL con Aproximaci\'on}
 \begin{columns}[T]
 \begin{column}{0.42\textwidth}
     \centering
@@ -982,12 +1024,12 @@ $670302056198056 \approx 2 \times 10^{170}$ configuraciones v\'alidas
         \draw[blue, thick] plot [smooth, tension=0.6] coordinates {(0,0.4) (1,1.1) (2,1.7) (3,2.3) (4,2.5)};
         
         % Leyenda
-        \node[red!70!black, font=\tiny, anchor=west] at (0.2,2.3) {$\bullet$ Muestras (Bellman targets)};
-        \node[blue, font=\tiny, anchor=west] at (0.2,2.0) {--- Aproximaci\'on $\hat{V}(x, \theta)$};
+%        \node[red!70!black, font=\tiny, anchor=west] at (0.2,2.3) {$\bullet$ Muestras (Bellman targets)};
+%        \node[blue, font=\tiny, anchor=west] at (0.2,2.0) {--- Aproximaci\'on $\hat{V}(x, \theta)$};
         
         % Generalización
-        \draw[dashed, gray] (2.2, 0) -- (2.2, 1.85);
-        \node[gray, font=\tiny, anchor=south] at (2.2, 1.85) {Inferencia};
+        %draw[dashed, gray] (2.2, 0) -- (2.2, 1.85);
+        %\node[gray, font=\tiny, anchor=south] at (2.2, 1.85) {Inferencia};
     \end{tikzpicture}
     \vspace{0.1cm}
     \scriptsize \textit{Generalizaci\'on: Estimamos $V(x)$ para estados no visitados bas\'andonos en la estructura de $\theta$.}
@@ -1010,7 +1052,7 @@ $670302056198056 \approx 2 \times 10^{170}$ configuraciones v\'alidas
 \vspace{0.2cm}
 
 \begin{block}{Objetivo: Minimizaci\'on del Residuo de Bellman}
-Buscamos los pesos $\theta$ que minimizan la discrepancia recursiva del sistema:
+Buscamos los pesos $\theta$ que minimizan la discrepancia en la ecuaci\'on de Bellman:
 \small
 \[ \min_\theta \sum_x p(x) \Bigl[ \underbrace{\max_a \{ r_a(x) + \alpha \sum_y P_a(x,y) V(y,\theta) \}}_{\text{Target calculado por Bootstrapping}} - V(x,\theta) \Bigr]^2 \]
 \end{block}
@@ -1025,36 +1067,36 @@ Buscamos los pesos $\theta$ que minimizan la discrepancia recursiva del sistema:
 En la pr\'actica, el espacio de estados es inabarcable y no siempre conocemos las probabilidades de transici\'on $P(x,y)$. No podemos calcular la suma sobre todos los $x$ ni la esperanza sobre todos los $y$.
 
 \begin{itemize}
-    \item<2-> \textbf{La Soluci\'on: Muestreo de Monte Carlo.}
-    Sustituimos el valor esperado por muestras reales de la experiencia:
+    \item<2->Sustituimos el valor esperado por muestras reales de la experiencia:
     \begin{small}
     \[ \text{Error} \approx \sum_{(x_i, r_i, y_i) \in \mathcal{D}} \Bigl[ \underbrace{(r_i + \alpha \hat{V}(y_i, \theta))}_{\text{Target (estimaci\'on)}} - \underbrace{\hat{V}(x_i, \theta)}_{\text{Predicci\'on}} \Bigr]^2 \]
     \end{small}
-    \item<3-> \textbf{Iteraci\'on:} Ajustamos $\theta$ mediante descenso de gradiente para que nuestra predicci\'on actual se acerque al target calculado con la recompensa observada.
+    \item<3->Ajustamos $\theta$ mediante descenso de gradiente o otros m\'etodos.
+\item<4-> En general, \textbf{la convergencia no est\'a garantizada.}
 \end{itemize}
 
 \end{frame}
 
-% --- DIAPOSITIVA 2: ALGORITMOS Y ESTABILIDAD ---
-\begin{frame}{Algoritmos Modernos y Desaf\'ios}
-Pasar de tablas a funciones (especialmente redes neuronales) introduce inestabilidad.
-
-\begin{itemize}
-    \item \textbf{DQN (Deep Q-Networks):} 
-    Usa una red neuronal para representar $Q(s,a)$. Para evitar que el algoritmo diverja, se usan:
-    \begin{itemize}
-        \item \textbf{Replay Buffer:} Recordar experiencias pasadas para romper la correlaci\'on de los datos.
-        \item \textbf{Target Networks:} Mantener una copia fija de los par\'ametros temporalmente para que el "target" no se mueva mientras aprendemos.
-    \end{itemize}
-    
-    \item<2-> \textbf{MuZero / AlphaZero:} 
-    Llevan la aproximaci\'on al l\'imite, aprendiendo no solo el valor, sino tambi\'en un modelo interno de las reglas del mundo.
-\end{itemize}
-
-\begin{alertblock}{Realidad T\'ecnica}<3->
-    A diferencia del caso tabular, aqu\'i la convergencia \textbf{no est\'a garantizada}. Los resultados son muy sensibles a la arquitectura y a los "hiperpar\'ametros" (tasa de aprendizaje, tama\~no de red).
-\end{alertblock}
-\end{frame}
+%% --- DIAPOSITIVA 2: ALGORITMOS Y ESTABILIDAD ---
+%\begin{frame}{Algoritmos Modernos y Desaf\'ios}
+%Pasar de tablas a funciones (especialmente redes neuronales) introduce inestabilidad.
+%
+%\begin{itemize}
+%    \item \textbf{DQN (Deep Q-Networks):} 
+%    Usa una red neuronal para representar $Q(s,a)$. Para evitar que el algoritmo diverja, se usan:
+%    \begin{itemize}
+%        \item \textbf{Replay Buffer:} Recordar experiencias pasadas para romper la correlaci\'on de los datos.
+%        \item \textbf{Target Networks:} Mantener una copia fija de los par\'ametros temporalmente para que el "target" no se mueva mientras aprendemos.
+%    \end{itemize}
+%    
+%    \item<2-> \textbf{MuZero / AlphaZero:} 
+%    Llevan la aproximaci\'on al l\'imite, aprendiendo no solo el valor, sino tambi\'en un modelo interno de las reglas del mundo.
+%\end{itemize}
+%
+%\begin{alertblock}{Realidad T\'ecnica}<3->
+%    A diferencia del caso tabular, aqu\'i la convergencia \textbf{no est\'a garantizada}. Los resultados son muy sensibles a la arquitectura y a los "hiperpar\'ametros" (tasa de aprendizaje, tama\~no de red).
+%\end{alertblock}
+%\end{frame}
 
 % --- SLIDE 1: CONCEPTOS BÁSICOS ---
 % --- SLIDE 1: DEFINICIONES ---
@@ -1094,17 +1136,17 @@ El objetivo principal es determinar el precio justo ($V_0$) del contrato hoy.
 
 % --- SLIDE 3: VALUACIÓN Y DECISIÓN SECUENCIAL ---
 \begin{frame}{Valuaci\'on como Consecuencia de la Decisi\'on}
-Para hallar el valor de la opci\'on, debemos asumir que el inversor actuar\'a de forma racional para maximizar su beneficio.
+Para calcular el valor de la opci\'on, debemos asumir que el inversor actuar\'a de forma racional para maximizar su beneficio.
 
 \begin{itemize}
-    \item \textbf{Dependencia Estrat\'egica:} El valor de la opci\'on hoy es el resultado de la mejor estrategia posible de ejercicio en el futuro.
-    \item \textbf{El Dilema Recurrente:} En cada instante $t$, el valor de la opci\'on es:
+    \item El valor de la opci\'on hoy es el resultado de la mejor estrategia posible de ejercicio en el futuro.
+    \item En cada instante $t$, el valor de la opci\'on es:
     \[ V_t = \max \left( \text{Valor de Ejercicio Inmediato}, \text{Valor de Continuaci\'on} \right) \]
 \end{itemize}
 
 \begin{itemize}
     \item<2-> \textbf{Valor de Continuaci\'on:} Lo que espero ganar si mantengo la opci\'on abierta.
-    \item<3-> \textbf{Conclusi\'on:} La valuaci\'on es, en esencia, un problema de \textbf{parada \'optima} (\textit{optimal stopping}).
+    \item<3->  La valuaci\'on es, en esencia, un problema de \textbf{parada \'optima}.
 \end{itemize}
 \end{frame}
 
@@ -1175,7 +1217,6 @@ Bajo esta medida, la evoluci\'on del precio del activo entre periodos es:
     Este es uno de los mayores hitos de las finanzas: el precio de una opci\'on \textbf{no depende del rendimiento esperado del activo ($\mu$)}. 
     \begin{itemize}
         \item No importa si el inversor es optimista o pesimista sobre el futuro del activo; si acuerdan la volatilidad ($\sigma$), llegar\'an al mismo precio justo.
-        \item El riesgo se "cancela" mediante la posibilidad de replicar la opci\'on operando el activo y bonos.
     \end{itemize}
 \end{block}}
 \end{frame}
@@ -1185,25 +1226,22 @@ Bajo esta medida, la evoluci\'on del precio del activo entre periodos es:
 Consolidamos el modelo $(S, A, P, R, \alpha)$ para una Put Americana:
 
 \begin{itemize}
-    \item \textbf{Estado ($s_t$):} El precio del activo subyacente en el periodo $t$.
+    \item \textbf{Estado ($s_t$):} \visible<2-> {El precio del activo subyacente en el periodo $t$.}
     \item \textbf{Acci\'on ($a_t$):} 
         \begin{itemize}
-            \item $a=0$: \textbf{Continuar} (mantener la opci\'on abierta).
-            \item $a=1$: \textbf{Ejercer} (cobrar payoff y terminar episodio).
+            \item<3-> $a=0$: \textbf{Continuar} (mantener la opci\'on abierta).
+            \item<3-> $a=1$: \textbf{Ejercer} (cobrar payoff y terminar episodio).
         \end{itemize}
     \item \textbf{Recompensa ($R$):}
         \begin{itemize}
-            \item $R(s, a=0) = 0$
-            \item $R(s, a=1) = \max(K - s, 0)$
+            \item<4-> $R(s, a=0) = 0$
+            \item<4-> $R(s, a=1) = \max(K - s, 0)$
         \end{itemize}
-    \item \textbf{Factor de Descuento:} $\alpha = e^{-r_f \Delta t}$.
-    \item \textbf{Transiciones ($P$):} Si $a=0$, el estado evoluciona seg\'un la din\'amica de riesgo neutro:
-    \[ s_{t+1} = s_t e^{(r_f - \frac{\sigma^2}{2})\Delta t + \sigma \sqrt{\Delta t} \epsilon_t} \]
+    \item \textbf{Factor de Descuento:} \visible<5->{$\alpha = e^{-r_f \Delta t}$.}
+    \item \textbf{Transiciones ($P$):} ]visible<6->{El estado evoluciona seg\'un la din\'amica de riesgo neutro:
+    \[ s_{t+1} = s_t e^{(r_f - \frac{\sigma^2}{2})\Delta t + \sigma \sqrt{\Delta t} \epsilon_t} \]}
 \end{itemize}
 
-\begin{center}
-    \small \textit{Este marco nos permite usar RL para encontrar la pol\'itica de parada \'optima y precificar la opci\'on.}
-\end{center}
 \end{frame}
 
 % --- SLIDE: ECUACIONES DE BELLMAN PARA PARADA ÓPTIMA ---
@@ -1224,17 +1262,15 @@ Para valuar la opci\'on, analizamos la funci\'on de valor óptima $Q^*(s,a)$. En
 
 % --- SLIDE 1: EL PROBLEMA DE PARADA ÓPTIMA Y RL ---
 \begin{frame}{Problemas de Parada \'Optima y RL}
-La valuaci\'on de opciones americanas pertenece a la clase de MDPs conocidos como \textbf{problemas de parada \'optima}. El objetivo es aprender una política que decida el momento exacto $\tau$ para detener el proceso y capturar el valor.
+ 
 
 \begin{itemize}
-    \item \textbf{M\'ultiples Enfoques de RL:} 
+    \item La valuaci\'on de opciones americanas pertenece a la clase de MDPs conocidos como \textbf{problemas de parada \'optima}.
     \begin{itemize}
-        \item \textbf{Métodos de Valor (Value-based):} Aproximar $Q_t^*(s,a)$ mediante arquitecturas lineales o redes neuronales (DQN).
-        \item \textbf{Programaci\'on Din\'amica Aproximada (ADP):} Resolver Bellman hacia atrás usando regresión para estimar el valor de continuación.
-        \item \textbf{Policy Search:} Optimizar directamente los parámetros de una frontera de ejercicio (ej. buscar el umbral óptimo).
+        \item El objetivo es aprender una política que decida el momento exacto $\tau$ para detener el proceso y capturar el valor.
     \end{itemize}
     
-    \item<2-> \textbf{Desafío del Estado Continuo:} Dado que el precio $s_t$ es continuo, no podemos usar tablas. Necesitamos una arquitectura de aproximaci\'on. Hoy vamos a utilizar una arquitectura lineal:
+    \item<2-> \textbf{Estado Continuo:} Dado que el precio $s_t$ es continuo, no podemos usar tablas. Necesitamos una arquitectura de aproximaci\'on. Hoy vamos a utilizar una arquitectura lineal:
     \[ Q_t^*(s,0) \approx \Phi(s, \theta_t) = \sum_{j=1}^K \phi^j(s)\theta_t^j \]
 \end{itemize}
 \end{frame}
@@ -1245,11 +1281,10 @@ La valuaci\'on de opciones americanas pertenece a la clase de MDPs conocidos com
 FQI es un algoritmo de \textbf{Aprendizaje por Refuerzo Offline} que convierte el problema de control en una secuencia de problemas de aprendizaje supervisado.
 
 \begin{itemize}
-    \item \textbf{Objetivo:} Aproximar la función de valor óptima $Q^*(s,a)$ cuando el espacio de estados es continuo.
-    \item \textbf{Mecánica:} En lugar de una tabla, usamos un aproximador de funciones (en nuestro caso, regresión lineal): 
-    \[ Q(s, a,; \theta) \approx \Phi(s, a)^T \theta \]
-    \item \textbf{Iteración:} Se actualizan los parámetros $\theta$ aplicando el operador de Bellman sobre un conjunto de datos (trayectorias simuladas).
-     \item Para valuaci\'on de opciones, es suficiente estimar $Q(s, 0; \theta) \approx \Phi(s) \theta$, el valor de esperar($a=0$).
+    \item En lugar de una tabla, usamos un aproximador de funciones (en nuestro caso, regresión lineal): 
+    \[ Q_t(s, a,; \theta) \approx \sum_i \phi_i(s, a) \theta_{t,i} \]
+    \item Se actualizan los parámetros $\theta$ aplicando el operador de Bellman sobre un conjunto de datos (trayectorias simuladas).
+     \item \textbf{Para valuaci\'on de opciones, es suficiente estimar $Q(s, 0; \theta) \approx \Phi(s) \theta$, el valor de esperar($a=0$).}
 \end{itemize}
 \end{frame}
 
@@ -1300,7 +1335,7 @@ Usa el payoff real cobrado en la trayectoria según la política previa (Monte C
 
 % --- SLIDE 4: VALUACIÓN POR SIMULACIÓN ---
 \begin{frame}{FQI Parte II: Valuación (Forward Simulation)}
-No usamos $\Phi$ directamente para el precio final. Simulamos **nuevas trayectorias** y aplicamos la política aprendida.
+No usamos $\Phi$ directamente para el precio final. Simulamos nuevas trayectorias y aplicamos la política aprendida.
 
 \begin{center}
 \begin{tikzpicture}[scale=0.5]
@@ -1314,9 +1349,9 @@ No usamos $\Phi$ directamente para el precio final. Simulamos **nuevas trayector
 \end{center}
 
 \begin{enumerate}
-    \item **Stopping Time ($\tau^j$):** Primer $t$ donde ejercer es mejor que el valor de continuación predicho:
+    \item \textbf{Stopping Time ($\tau^j$):} Primer $t$ donde ejercer es mejor que el valor de continuación predicho:
     \[ \tau^j = \min \{ t : K - s_t^j > \Phi(s_t^j, \theta_t) \} \]
-    \item **Precio:** $\hat{V}_0 = \frac{1}{M} \sum_{j=1}^M \alpha^{\tau^j} \text{Payoff}(s_{\tau^j}^j)$
+    \item \textbf{Precio:} $\hat{V}_0 = \frac{1}{M} \sum_{j=1}^M \alpha^{\tau^j} \text{Payoff}(s_{\tau^j}^j)$
 \end{enumerate}
 \end{frame}
 
@@ -1356,10 +1391,23 @@ Aunque el modelo de una variable ($s_t$) es didáctico, los problemas reales enf
 \end{block}
 \end{frame}
 
+\begin{frame}{Conclusiones}
+\begin{itemize}
+\item Paradigma de MDP es poderoso y suficientemente flexible para modelar una amplia variedad de aplicaciones en distintos campos.
+\item<2-> Combinado con aprendizaje, potencial para encontrar soluciones competitivas.
+\item<3-> Aproximaciones a la función valor y/o política permite tratar problemas de alta complejidad y muchas dimensiones.
+\item<4-> Desafíos en la implementación estable y correcta de los algoritmos.
+\item<5-> Complejidad del abordaje debe ser acorde a los datos disponibles.
+\item<6-> Potencialmente grandes beneficios con la adopción de redes neuronales
+\end{itemize}
+\end{frame}
+
+\end{document}
+
 % --- SLIDE FINAL: CONCLUSIONES DEL CURSO ---
 \begin{frame}{Conclusiones: El Futuro del Control y la Decisi\'on}
-\begin{columns}
-\begin{column}{0.6\textwidth}
+%\begin{columns}
+%\begin{column}{0.6\textwidth}
     \begin{itemize}
         \item \textbf{Flexibilidad:} El paradigma MDP modela desde finanzas hasta rob\'otica y log\'istica.
         \item<2-> \textbf{Sinergia:} La combinaci\'on de MDP con \textit{Machine Learning} permite soluciones competitivas en entornos inciertos.
@@ -1367,30 +1415,30 @@ Aunque el modelo de una variable ($s_t$) es didáctico, los problemas reales enf
         \item<4-> \textbf{Pragmatismo:} La complejidad del algoritmo debe ser coherente con la calidad de los datos disponibles.
         \item<5-> \textbf{Impacto:} Las Redes Neuronales (Deep RL) abren fronteras antes inalcanzables.
     \end{itemize}
-\end{column}
-
-\begin{column}{0.4\textwidth}
-    \begin{center}
-    \begin{tikzpicture}[scale=0.7]
-        % Dibujamos las formas de colores con mezcla
-        \begin{scope}[blend group=soft light]
-            \fill[red!30]   ( 90:1.2) circle (1.8);
-            \fill[green!30] (210:1.2) circle (1.8);
-            \fill[blue!30]  (330:1.2) circle (1.8);
-        \end{scope}
-        
-        % Dibujamos las etiquetas FUERA del grupo de mezcla para que sean negro sólido
-        \node[black, font=\tiny\bfseries] at ( 90:2.1) {MDP};
-        \node[black, font=\tiny\bfseries] at (210:2.1) {RL};
-        \node[black, font=\tiny\bfseries] at (330:2.1) {DL};
-        \node[black, font=\tiny\bfseries, align=center] at (0,0) {Soluciones\\Efectivas};
-    \end{tikzpicture}
-    \end{center}
-    \vspace{0.5cm}
+%\end{column}
+%
+%\begin{column}{0.4\textwidth}
+%    \begin{center}
+%    \begin{tikzpicture}[scale=0.7]
+%        % Dibujamos las formas de colores con mezcla
+%        \begin{scope}[blend group=soft light]
+%            \fill[red!30]   ( 90:1.2) circle (1.8);
+%            \fill[green!30] (210:1.2) circle (1.8);
+%            \fill[blue!30]  (330:1.2) circle (1.8);
+%        \end{scope}
+%        
+%        % Dibujamos las etiquetas FUERA del grupo de mezcla para que sean negro sólido
+%        \node[black, font=\tiny\bfseries] at ( 90:2.1) {MDP};
+%        \node[black, font=\tiny\bfseries] at (210:2.1) {RL};
+%        \node[black, font=\tiny\bfseries] at (330:2.1) {DL};
+%        \node[black, font=\tiny\bfseries, align=center] at (0,0) {Soluciones\\Efectivas};
+%    \end{tikzpicture}
+%    \end{center}
+%    \vspace{0.5cm}
     \begin{block}{Desafío}<6->
-        La implementación correcta y estable sigue siendo el mayor reto del ingeniero.
+        La implementación correcta y estable sigue siendo el mayor desaf\'io en la adopci\'on de esta
     \end{block}
-\end{column}
-\end{columns}
+%\end{column}
+%\end{columns}
 \end{frame}
 \end{document}
